@@ -12,6 +12,7 @@ import Home from './src/screens/Home'
 import PageProduct from './src/screens/PageProduct'
 import Category from './src/screens/Category'
 import Catalog from './src/screens/Catalog'
+import MyBag from './src/screens/MyBag'
 
 import store from './src/redux/store'
 
@@ -58,6 +59,11 @@ class App extends Component{
               options={{headerShown: false}}
               name='Catalog'
               component={Catalog}
+            />
+            <Stack.Screen 
+              options={{headerShown: false}}
+              name='MyBag'
+              component={MyBag}
             />
           </Stack.Navigator>
           

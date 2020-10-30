@@ -6,6 +6,11 @@ import imageCard from '../assets/imageCard.png'
 import Star from '../assets/activated.png'
 
 export default class PageProduct extends Component {
+
+  myBag = () => {
+    this.props.navigation.navigate('MyBag')
+  }
+  
   render() {
     return (
       <ScrollView>
@@ -35,7 +40,7 @@ export default class PageProduct extends Component {
             </Text>
           </View>
         </View>
-        <TouchableOpacity block activeOpacity={0.7} style={style.addToCart} >
+        <TouchableOpacity block activeOpacity={0.7} style={style.addToCart} onPress={this.myBag} >
           <Text style={{color: 'white', fontWeight: 'bold'}}>ADD TO CART</Text>
         </TouchableOpacity>
         

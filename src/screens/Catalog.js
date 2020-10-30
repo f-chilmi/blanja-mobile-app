@@ -17,6 +17,9 @@ export default class Catalog extends Component {
       selected2: value
     });
   }
+  pageProduct = () => {
+    this.props.navigation.navigate('PageProduct')
+  }
   render() {
     return (
       <ScrollView>
@@ -40,7 +43,28 @@ export default class Catalog extends Component {
           </Item>
         </Form>
 
-        <Grid>
+        <Grid style={{flexWrap: 'wrap'}}>
+          <Col style={style.col}>
+          <TouchableOpacity onPress={this.pageProduct}>
+            <Card style={style.card}>
+              <CardItem cardBody style={{flexDirection: 'column', justifyContent: "flex-start"}}>
+                <View style={style.imageWrapper}>
+                  <Image source={imageHome} style={style.img} />
+                </View>
+                <View style={style.starWrapper}>
+                  <Image source={Star} style={style.star} />
+                  <Image source={Star} style={style.star} />
+                  <Image source={Star} style={style.star} />
+                  <Image source={Star} style={style.star} />
+                  <Image source={Star} style={style.star} />
+                </View>
+                <Text style={style.shop}>Zalora Cloth</Text>
+                <Text style={style.nameProduct}>Blouse</Text>
+                <Text style={style.priceProduct}>Rp150.000</Text>
+              </CardItem>
+            </Card>
+            </TouchableOpacity>
+          </Col>
           <Col style={style.col}>
             <Card style={style.card}>
               <CardItem cardBody style={{flexDirection: 'column', justifyContent: "flex-start"}}>
