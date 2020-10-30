@@ -5,6 +5,11 @@ import {Card, CardItem, Body, Button, Icon} from 'native-base'
 import imageHome from '../assets/Image.png'
 
 export default class MyBag extends Component {
+
+  checkout = () => {
+    this.props.navigation.navigate('Checkout')
+  }
+
   render() {
     return (
       <SafeAreaView>
@@ -40,7 +45,7 @@ export default class MyBag extends Component {
                 <Text style={style.textPrice}>Rp150.000</Text>
               </View>
               <View style={style.buttonBlock}>
-                <Button block style={style.buttonCheckOut}>
+                <Button block style={style.buttonCheckOut} onPress={this.checkout}>
                   <Text style={style.textCheckOut}>CHECK OUT</Text>
                 </Button>
               </View>
