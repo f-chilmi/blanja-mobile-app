@@ -1,26 +1,40 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {connect} from 'react-redux';
 
 import store from '../redux/store';
 import auth from '../redux/actions/auth';
 
 class Login extends Component {
-
   state = {
     email: '',
-    password: ''
-  }
+    password: '',
+    alertMsg: ''
+  };
 
   doLogin = () => {
-    const {email, password} = this.state
-    // if(email&&password){
-    //   const data = {email, password}
-    //   console.log(data)
-    //   store.dispatch(auth.login(data))
-    //   Alert.alert('login success')
-    // }
-    this.props.navigation.navigate('Home')
+    const {email, password} = this.state;
+    const data = {email, password};
+    store.dispatch(auth.login(data));
+  };
+
+  showAlert = () => {
+    const {alertMsg} = this.props.auth;
+    if (alertMsg !== this.state.alertMsg) {
+      this.setState({alertMsg});
+      Alert.alert(alertMsg);
+    }
+  }
+
+  componentDidUpdate() {
+    this.showAlert()
   }
 
   render() {
@@ -33,11 +47,18 @@ class Login extends Component {
         <View style={style.parentContent}>
           <View style={style.inputWrapper}>
             <Text style={style.labelText}>Email</Text>
-            <TextInput name='email' onChangeText={(text) => this.setState({email: text})}></TextInput>
+            <TextInput
+              name="email"
+              onChangeText={(text) => this.setState({email: text})}
+            />
           </View>
           <View style={style.inputWrapper}>
             <Text style={style.labelText}>Password</Text>
-            <TextInput name='password' onChangeText={(text) => this.setState({password: text})} secureTextEntry={true}></TextInput>
+            <TextInput
+              name="password"
+              onChangeText={(text) => this.setState({password: text})}
+              secureTextEntry={true}
+            />
           </View>
         </View>
         <View style={style.textAlready}>
@@ -48,8 +69,6 @@ class Login extends Component {
             <Text style={style.textButton}>LOGIN</Text>
           </TouchableOpacity>
         </View>
-        
-
       </View>
     );
   }
@@ -75,8 +94,8 @@ const style = StyleSheet.create({
   },
   labelText: {
     fontSize: 12,
-    color: 'grey'
-  },  
+    color: 'grey',
+  },
   signupText: {
     fontWeight: 'bold',
     fontSize: 26,
@@ -90,7 +109,7 @@ const style = StyleSheet.create({
     width: '90%',
     marginVertical: 10,
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   textAlready1: {
     fontSize: 12,
@@ -111,15 +130,16 @@ const style = StyleSheet.create({
   textButton: {
     color: 'white',
     fontWeight: 'bold',
-
-  }
+  },
 });
 
-const mapStateToProps = state => ({auth: state.auth})
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
 
 const mapDispatchToProps = {
-  login: auth.login
-}
+  login: auth.login,
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
 // export default Login;

@@ -1,47 +1,45 @@
 import React, { Component } from 'react'
 import {View, StyleSheet, Image, TouchableOpacity, Text, SafeAreaView, ScrollView} from 'react-native'
-import { Grid, Col, Card, CardItem, Row, Form, Item, Picker, Icon, Left, Body, Right } from 'native-base';
+import { Grid, Col, Card, CardItem, ActionSheet, Button, Item, Icon, Left, Body, Right } from 'native-base';
 
 import imageHome from '../assets/Image.png'
 import Star from '../assets/activated.png'
+
+var BUTTONS = ["Option 0", "Option 1", "Option 2", "Delete", "Cancel"];
+// var DESTRUCTIVE_INDEX = 3;
+// var CANCEL_INDEX = 4;
 
 export default class Catalog extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected2: undefined
+      options: ["Option 0", "Option 1", "Option 2", "Delete", "Cancel"],
     };
-  }
-  onValueChange2(value= string) {
-    this.setState({
-      selected2: value
-    });
   }
   pageProduct = () => {
     this.props.navigation.navigate('PageProduct')
   }
   render() {
+    console.log(this.state.options)
     return (
       <ScrollView>
 
-        <Form>
-          <Item picker>
-            <Picker
-              mode="dropdown"
-              iosIcon={<Icon name="arrow-down" />}
-              style={{ width: undefined }}
-              placeholder="Filter"
-              placeholderIconColor="#007aff"
-              selectedValue={this.state.selected2}
-              onValueChange={this.onValueChange2.bind(this)}
-            >
-              <Picker.Item label="Popular" value="key0" />
-              <Picker.Item label="Newest" value="key1" />
-              <Picker.Item label="Price: lowest to high" value="key2" />
-              <Picker.Item label="Price: highest to low" value="key3" />
-            </Picker>
-          </Item>
-        </Form>
+          {/* <Button 
+            onPress={
+            ActionSheet.show(
+              {
+                options: this.state.options,
+                // cancelButtonIndex: CANCEL_INDEX,
+                // destructiveButtonIndex: DESTRUCTIVE_INDEX,
+                title: "Testing ActionSheet"
+              },
+              // buttonIndex => {
+              //   this.setState({ clicked: BUTTONS[buttonIndex] });
+              // }
+            )}
+          >
+            <Text>Filter</Text>
+          </Button> */}
 
         <Grid style={{flexWrap: 'wrap'}}>
           <Col style={style.col}>

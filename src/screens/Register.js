@@ -1,35 +1,43 @@
 import React, {Component} from 'react';
-import {View, Image, Text, StyleSheet, TextInput, TouchableOpacity, Alert} from 'react-native';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {connect} from 'react-redux';
 
 import store from '../redux/store';
 import auth from '../redux/actions/auth';
 
 class Register extends Component {
-
   state = {
     name: '',
     email: '',
-    password: ''
-  }
+    password: '',
+  };
 
   goToLogin = () => {
-    this.props.navigation.navigate('Login')
-  }
+    this.props.navigation.navigate('Login');
+  };
 
   signup = () => {
-    const {name, email, password} = this.state
-    if(name&&email&&password){
-      const data = {name, email, password}
-      console.log(data)
-      store.dispatch(auth.login(data))
+    this.props.navigation.navigate('Home');
+    const {name, email, password} = this.state;
+    if (name && email && password) {
+      const data = {name, email, password};
+      console.log(data);
+      store.dispatch(auth.signup(data));
     } else {
-      console.log('all field must be filled')
+      console.log('all field must be filled');
     }
-  }
+  };
 
   render() {
-    console.log(this.state)
+    console.log(this.state);
     return (
       <View style={style.parent}>
         <View style={style.signupWrapper}>
@@ -37,24 +45,25 @@ class Register extends Component {
         </View>
         <View style={style.parentContent}>
           <View style={style.inputWrapper}>
-            <Text style={style.labelText} >Username</Text>
-            <TextInput onChangeText={(text) => this.setState({name: text})}></TextInput>
+            <Text style={style.labelText}>Username</Text>
+            <TextInput onChangeText={(text) => this.setState({name: text})} />
           </View>
           <View style={style.inputWrapper}>
-            <Text style={style.labelText} >Email</Text>
-            <TextInput onChangeText={(text) => this.setState({email: text})}></TextInput>
+            <Text style={style.labelText}>Email</Text>
+            <TextInput onChangeText={(text) => this.setState({email: text})} />
           </View>
           <View style={style.inputWrapper}>
             <Text style={style.labelText}>Password</Text>
-            <TextInput secureTextEntry={true} onChangeText={(text) => this.setState({password: text})}></TextInput>
+            <TextInput
+              secureTextEntry={true}
+              onChangeText={(text) => this.setState({password: text})}
+            />
           </View>
         </View>
         <View style={style.textAlready}>
           <Text style={style.textAlready1}>Already have an account? </Text>
           <TouchableOpacity onPress={this.goToLogin}>
-            <Text style={style.textLogin}>
-              Login
-            </Text>
+            <Text style={style.textLogin}>Login</Text>
           </TouchableOpacity>
         </View>
         <View style={style.btnWrapper}>
@@ -62,8 +71,6 @@ class Register extends Component {
             <Text style={style.textButton}>SIGN UP</Text>
           </TouchableOpacity>
         </View>
-        
-
       </View>
     );
   }
@@ -89,8 +96,8 @@ const style = StyleSheet.create({
   },
   labelText: {
     fontSize: 12,
-    color: 'grey'
-  },  
+    color: 'grey',
+  },
   signupText: {
     fontWeight: 'bold',
     fontSize: 26,
@@ -104,7 +111,7 @@ const style = StyleSheet.create({
     width: '90%',
     marginVertical: 10,
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   textAlready1: {
     fontSize: 12,
@@ -129,15 +136,14 @@ const style = StyleSheet.create({
   textButton: {
     color: 'white',
     fontWeight: 'bold',
-
-  }
+  },
 });
 
 // export default Register
-const mapStateToProps = state => ({auth: state.auth})
+const mapStateToProps = (state) => ({auth: state.auth});
 
 const mapDispatchToProps = {
-  signup: auth.signup
-}
+  signup: auth.signup,
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register)
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

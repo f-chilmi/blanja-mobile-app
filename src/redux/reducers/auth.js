@@ -20,11 +20,11 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: true,
-        alertMsg: 'Wrong email or password'
+        alertMsg: action.payload.data.token.message
       }
     }
     case 'AUTH_USER_FULFILLED': {
-      localStorage.setItem('token', action.payload.data.token)
+      // localStorage.setItem('token', action.payload.data.token)
       return {
         ...state,
         isLoading: false,

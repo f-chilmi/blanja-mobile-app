@@ -1,26 +1,29 @@
-import React, { Component } from 'react'
-import {View, StyleSheet, Image, TouchableOpacity, Text} from 'react-native'
+import React, {Component} from 'react';
+import {View, StyleSheet, Image, TouchableOpacity, Text} from 'react-native';
 
-import Logo from '../assets/Vector.png'
+import Logo from '../assets/Vector.png';
 
 export default class Landing extends Component {
-
   goToSignup = () => {
-    this.props.navigation.navigate('Register')
-  }
+    this.props.navigation.navigate('Register');
+  };
 
   goToLogin = () => {
-    this.props.navigation.navigate('Login')
-  }
-  
+    this.props.navigation.navigate('Login');
+  };
+
   render() {
+    console.log(this.props)
     return (
       <View style={style.parent}>
         <View style={style.imagewrapper}>
-          <Image source={Logo} style={{height: 100}}/>
+          <Image source={Logo} style={{height: 100}} />
         </View>
         <View>
-          <TouchableOpacity block style={style.signup} onPress={this.goToSignup}>
+          <TouchableOpacity
+            block
+            style={style.signup}
+            onPress={this.goToSignup}>
             <Text style={style.textButton1}>SIGNUP</Text>
           </TouchableOpacity>
           <TouchableOpacity block style={style.login} onPress={this.goToLogin}>
@@ -28,7 +31,7 @@ export default class Landing extends Component {
           </TouchableOpacity>
         </View>
       </View>
-    )
+    );
   }
 }
 
@@ -59,7 +62,7 @@ const style = StyleSheet.create({
     borderRadius: 30,
     marginVertical: 30,
     borderWidth: 2,
-    borderColor: 'white'
+    borderColor: 'white',
   },
   textButton: {
     color: 'white',
@@ -68,5 +71,5 @@ const style = StyleSheet.create({
   textButton1: {
     color: 'white',
     fontWeight: 'bold',
-  }
-})
+  },
+});
