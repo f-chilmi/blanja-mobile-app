@@ -14,4 +14,12 @@ export default {
       payload: http(token).patch('/users', qs.stringify(data)),
     };
   },
+  updateImage: (token, form) => ({
+    type: 'UPDATE_PROFILE',
+    payload: http(token).patch('/users', form)
+  }),
+  changePassword: (token, data) => ({
+    type: 'CHANGE_PASSWORD',
+    payload: http(token).patch('/users/password', qs.stringify(data))
+  })
 };

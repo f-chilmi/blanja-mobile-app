@@ -11,10 +11,11 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
+import {API_URL} from '@env';
 
 import profileAction from '../redux/actions/profile';
 
-const API_URL = 'http://127.0.0.1:8080';
+// const API_URL = 'http://127.0.0.1:8080';
 
 class Profile extends Component {
   constructor(props) {
@@ -36,14 +37,22 @@ class Profile extends Component {
   };
   handleChoosePhoto = () => {
     const options = {};
-    ImagePicker.launchImageLibrary(options, (response) => {
-      console.log(response)
-      // if (response.uri) {
-      //   this.setState({image: response, modalOpen: false});
-      // }
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log(response);
+      if (response.uri) {
+        this.setState({image: response});
+        const form = new FormData();
+        form.append('picture', {
+          uri: String('file://'.concat(response.path)),
+          type: response.type,
+          name: response.fileName,
+        });
+        this.props.updateImage(this.props.auth.token, form);
+      }
     });
   };
   render() {
+    console.log(this.props);
     const {data} = this.props.profile;
     const {image, modalOpen} = this.state;
     return (
@@ -55,13 +64,17 @@ class Profile extends Component {
               this.setState({modalOpen: true});
             }}>
             <View style={style.avaWrapper}>
-              {data.urlPicture !== undefined ? (
-                <Image
-                  style={style.img}
-                  source={{uri: `${API_URL}${data.urlPicture}`}}
-                />
+              {image == '' ? (
+                data.urlPicture == undefined ? (
+                  <Icon size={80} name="user" />
+                ) : (
+                  <Image
+                    style={style.img}
+                    source={{uri: `${API_URL}/${data.urlPicture}`}}
+                  />
+                )
               ) : (
-                <Icon size={80} name="user" />
+                <Image style={style.img} source={image} />
               )}
             </View>
           </TouchableOpacity>
@@ -97,19 +110,41 @@ class Profile extends Component {
             </View>
           </TouchableOpacity>
         </View>
-        <Modal visible={modalOpen}>
-          <View>
-            <Image source={{uri: image.uri}} style={{width: 300, height: 300}}/>
-            <TouchableOpacity onPress={this.handleChoosePhoto}>
-              <Text>Choose photo</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>this.setState({modalOpen: false})}>
-              <Text>Close</Text>
+        <Modal transparent visible={modalOpen}>
+          <View style={style.modalView1}>
+            <View style={style.avaWrapper1}>
+              {image == '' ? (
+                data.urlPicture == undefined ? (
+                  <Icon size={80} name="user" />
+                ) : (
+                  <Image
+                    style={style.ava}
+                    source={{uri: `${API_URL}/${data.urlPicture}`}}
+                  />
+                )
+              ) : (
+                <Image style={style.ava} source={image} />
+              )}
+            </View>
+            <View style={style.buttonWrapper2}>
+              <TouchableOpacity
+                style={style.choosePhoto}
+                onPress={this.handleChoosePhoto}>
+                <Text>Choose</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={style.choosePhoto}
+                onPress={() => this.setState({modalOpen: false})}>
+                <Text>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={style.choosePhoto1}>
+              <Text>Save</Text>
             </TouchableOpacity>
           </View>
         </Modal>
       </View>
-    )
+    );
   }
 }
 
@@ -120,6 +155,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   getProfile: profileAction.getProfile,
+  updateProfile: profileAction.updateProfile,
+  updateImage: profileAction.updateImage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
@@ -140,6 +177,16 @@ const style = StyleSheet.create({
   avaWrapper: {
     width: 80,
     height: 80,
+  },
+  avaWrapper1: {
+    height: 200,
+    width: 200,
+    alignSelf: 'center',
+  },
+  ava: {
+    height: '100%',
+    width: '100%',
+    borderRadius: 200,
   },
   img: {
     width: '100%',
@@ -171,5 +218,72 @@ const style = StyleSheet.create({
   },
   textOrder: {
     fontWeight: 'bold',
+  },
+  modalView1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    paddingLeft: '3%',
+    paddingRight: '3%',
+    backgroundColor: 'white',
+  },
+  form: {
+    marginLeft: 0,
+  },
+  input: {
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    fontSize: 12,
+    marginBottom: 5,
+  },
+  label: {
+    fontSize: 10,
+    color: 'grey',
+  },
+  buttonWrapper: {
+    flexDirection: 'row',
+    width: '70%',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  buttonWrapper2: {
+    flexDirection: 'row',
+    width: '90%',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  choosePhoto: {
+    borderWidth: 1,
+    borderRadius: 25,
+    borderColor: 'black',
+    width: '45%',
+    marginVertical: 10,
+    height: 40,
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  choosePhoto1: {
+    borderWidth: 1,
+    borderRadius: 25,
+    borderColor: 'black',
+    width: '90%',
+    marginVertical: 10,
+    height: 40,
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  buttonOutline: {
+    width: 90,
+    height: 40,
+    borderColor: 'black',
+  },
+  buttonTittle: {
+    fontSize: 14,
+    color: 'black',
   },
 });

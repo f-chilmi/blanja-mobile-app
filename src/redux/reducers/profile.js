@@ -51,7 +51,32 @@ export default (state=initialState, action)=>{
         isLoading: false,
         isLogin: true,
         alertMsg: 'Profile updated',
-        successUpdate: true
+        successUpdate: true,
+        data: action.payload.data,
+      }
+    }
+    case 'CHANGE_PASSWORD_PENDING' : {
+      return {
+        ...state,
+        isLoading: true
+      }
+    }
+    case 'CHANGE_PASSWORD_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        alertMsg: 'Failed change password'
+      }
+    }
+    case 'CHANGE_PASSWORD_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        isLogin: true,
+        alertMsg: 'Password changed',
+        successUpdate: true,
+        data: action.payload.data,
       }
     }
     default : {
