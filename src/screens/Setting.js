@@ -2,47 +2,87 @@ import React, {Component} from 'react';
 import {
   View,
   Text,
+  Modal,
+  Alert,
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  TouchableHighlight,
 } from 'react-native';
 import {connect} from 'react-redux';
+import moment from 'moment';
 
 import profileAction from '../redux/actions/profile';
+import store from '../redux/store';
 
 class Setting extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      birth: '',
+      modalPersonal: '',
+      modalPassword: false,
+    };
+  }
   componentDidMount() {
     this.props.getProfile(this.props.auth.token);
   }
+  componentDidUpdate() {
+    if (this.props.profile.data !== undefined) {
+      const {data} = this.props.profile;
+      const date = data.birth;
+      let dateNew = moment(date).format('YYYY-MM-DD');
+      // var dateNew = date.toLocaleDateString('en-CA');
+      console.log(dateNew);
+      if (this.state.name == '' && this.state.birth == '') {
+        this.setState({
+          name: data.name,
+          birth: data.birth,
+        });
+        console.log('updating state');
+      }
+    }
+  }
+  editPersonal = () => {
+    const {name, birth} = this.state;
+    const data = {name, birth}
+    console.log(data)
+    store.dispatch(profileAction.updateProfile(this.props.auth.token, data));
+    this.setState({modalPersonal: false})
+  }
   render() {
-    console.log(this.props)
-    const {data} = this.props.profile
+    const {data} = this.props.profile;
+    const {name, birth, modalPassword, modalPersonal} = this.state;
     return (
       <View style={style.parent}>
         <Text style={style.settingText}>Settings</Text>
-        <Text style={style.sub}>Personal information</Text>
+        <View style={style.wrapper}>
+          <View style={style.leftText}>
+            <Text style={style.passwordText}>Personal information</Text>
+          </View>
+          <TouchableOpacity
+            style={style.changePsw}
+            onPress={() => this.setState({modalPersonal: true})}>
+            <Text style={style.rightText}>Change</Text>
+          </TouchableOpacity>
+        </View>
         <View style={style.inputWrapper}>
           <Text style={style.labelText}>Full name</Text>
-          <TextInput
-            name="fullname"
-            value={data.name}
-            onChangeText={(text) => this.setState({fullname: text})}
-          />
+          <TextInput name="name" value={name} />
         </View>
         <View style={style.inputWrapper}>
           <Text style={style.labelText}>Date of birth</Text>
-          <TextInput
-            name="birth"
-            value={data.birth}
-            onChangeText={(text) => this.setState({birth: text})}
-          />
+          <TextInput name="birth" value={birth} />
         </View>
 
         <View style={style.wrapper}>
           <View style={style.leftText}>
             <Text style={style.passwordText}>Password</Text>
           </View>
-          <TouchableOpacity style={style.changePsw}>
+          <TouchableOpacity
+            style={style.changePsw}
+            onPress={() => this.setState({modalPassword: true})}>
             <Text style={style.rightText}>Change</Text>
           </TouchableOpacity>
         </View>
@@ -54,6 +94,74 @@ class Setting extends Component {
             onChangeText={(text) => this.setState({password: text})}
           />
         </View>
+
+        <Modal visible={modalPersonal}>
+          <View style={style.modal}>
+            <View style={style.modalChild}>
+              <View style={style.inputWrapper}>
+                <TextInput
+                  style={style.textInput}
+                  name="name"
+                  value={name}
+                  onChangeText={(text) => this.setState({name: text})}
+                />
+                <TextInput
+                  name="birth"
+                  style={style.textInput}
+                  value={birth}
+                  onChangeText={(text) => this.setState({birth: text})}
+                />
+                <TouchableOpacity
+                  block
+                  activeOpacity={0.7}
+                  style={style.buttonBlock}
+                  onPress={this.editPersonal}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    SAVE
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        <Modal visible={modalPassword}>
+          <View style={style.modal}>
+            <View style={style.modalChild}>
+              <View style={style.inputWrapper}>
+                <TextInput
+                  style={style.textInput}
+                  name="oldPassword"
+                  placeholder="Old password"
+                  secureTextEntry={true}
+                />
+                <TextInput
+                  style={style.textInput}
+                  name="newPassword"
+                  placeholder="New password"
+                  secureTextEntry={true}
+                />
+                <TextInput
+                  style={style.textInput}
+                  name="confirmPassword"
+                  placeholder="Confirm new password"
+                  secureTextEntry={true}
+                />
+                <TouchableOpacity
+                  block
+                  activeOpacity={0.7}
+                  style={style.buttonBlock}
+                  onPress={() => {
+                    this.setState({modalPassword: false});
+                  }}>
+                  <Text style={{color: 'white', fontWeight: 'bold'}}>
+                    SAVE PASSWORD
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -86,7 +194,7 @@ const style = StyleSheet.create({
   },
   settingText: {
     fontSize: 26,
-    marginVertical: 15,
+    marginTop: 15,
     fontWeight: 'bold',
   },
   sub: {
@@ -99,7 +207,7 @@ const style = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     marginTop: 30,
-    marginBottom: 10
+    marginBottom: 10,
   },
   rightText: {
     marginLeft: 'auto',
@@ -110,5 +218,31 @@ const style = StyleSheet.create({
   },
   changePsw: {
     marginLeft: 'auto',
+  },
+  modal: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    padding: '5%',
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  modalChild: {
+    backgroundColor: 'white',
+  },
+  buttonBlock: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 30,
+    backgroundColor: '#DB3022',
+    borderRadius: 30,
+    width: '96%',
+    marginLeft: '2%',
+    marginRight: '2%',
+    marginTop: 20,
+    marginBottom: 5,
+  },
+  textInput: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'grey',
   },
 });

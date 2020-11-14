@@ -1,7 +1,9 @@
 const initialState = {
   data: [],
   dataPopular: [],
+  allData: [],
   categoryList: [],
+  dataCatalog: [],
   successGetCategory: false,
   isLoading: false,
   isError: false,
@@ -72,6 +74,48 @@ export default (state = initialState, action) => {
         isLoading: false,
         categoryList: action.payload.data.data,
         successGetCategory: true,
+      };
+    }
+    case 'ALL_DATA_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case 'ALL_DATA_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        alertMsg: 'There is an error at request data',
+      };
+    }
+    case 'ALL_DATA_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        allData: action.payload.data.info,
+      };
+    }
+    case 'GET_CATALOG_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case 'GET_CATALOG_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        alertMsg: 'There is an error at request data',
+      };
+    }
+    case 'GET_CATALOG_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        dataCatalog: action.payload.data.info,
       };
     }
     default: {

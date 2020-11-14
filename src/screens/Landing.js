@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, Image, TouchableOpacity, Text} from 'react-native';
+import SplashScreen from 'react-native-splash-screen';
 
 import Logo from '../assets/Vector.png';
 
 export default class Landing extends Component {
+  componentDidMount(){
+    SplashScreen.hide();
+  }
   goToSignup = () => {
     this.props.navigation.navigate('Register');
   };

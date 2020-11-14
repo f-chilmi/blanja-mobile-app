@@ -1,125 +1,131 @@
-import React, { Component } from 'react'
-import {View, StyleSheet, Image, TouchableOpacity, Text, SafeAreaView, ScrollView} from 'react-native'
-import { Grid, Col, Card, CardItem, ActionSheet, Button, Item, Icon, Left, Body, Right } from 'native-base';
+import React, {useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+// import { useHistory } from 'react-router-dom'
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  FlatList,
+} from 'react-native';
+import {
+  Header,
+  Content,
+  Card,
+  CardItem,
+  ActionSheet,
+  Button,
+  Item,
+  Icon,
+  Left,
+  Body,
+  Right,
+} from 'native-base';
 
-import imageHome from '../assets/Image.png'
-import Star from '../assets/activated.png'
+import homeAction from '../redux/actions/home';
 
-var BUTTONS = ["Option 0", "Option 1", "Option 2", "Delete", "Cancel"];
-// var DESTRUCTIVE_INDEX = 3;
-// var CANCEL_INDEX = 4;
+const API_URL = 'http://127.0.0.1:8080';
 
-export default class Catalog extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      options: ["Option 0", "Option 1", "Option 2", "Delete", "Cancel"],
-    };
-  }
-  pageProduct = () => {
-    this.props.navigation.navigate('PageProduct')
-  }
-  render() {
-    console.log(this.state.options)
-    return (
-      <ScrollView>
+import Star from '../assets/activated.png';
 
-          {/* <Button 
-            onPress={
-            ActionSheet.show(
-              {
-                options: this.state.options,
-                // cancelButtonIndex: CANCEL_INDEX,
-                // destructiveButtonIndex: DESTRUCTIVE_INDEX,
-                title: "Testing ActionSheet"
-              },
-              // buttonIndex => {
-              //   this.setState({ clicked: BUTTONS[buttonIndex] });
-              // }
-            )}
-          >
-            <Text>Filter</Text>
-          </Button> */}
+const Catalog = ({navigation}) => {
+  // const history = useHistory()
+  const dispatch = useDispatch();
+  const home = useSelector((state) => state.home);
+  const data = home.dataCatalog;
 
-        <Grid style={{flexWrap: 'wrap'}}>
-          <Col style={style.col}>
-          <TouchableOpacity onPress={this.pageProduct}>
-            <Card style={style.card}>
-              <CardItem cardBody style={{flexDirection: 'column', justifyContent: "flex-start"}}>
-                <View style={style.imageWrapper}>
-                  <Image source={imageHome} style={style.img} />
-                </View>
-                <View style={style.starWrapper}>
-                  <Image source={Star} style={style.star} />
-                  <Image source={Star} style={style.star} />
-                  <Image source={Star} style={style.star} />
-                  <Image source={Star} style={style.star} />
-                  <Image source={Star} style={style.star} />
-                </View>
-                <Text style={style.shop}>Zalora Cloth</Text>
-                <Text style={style.nameProduct}>Blouse</Text>
-                <Text style={style.priceProduct}>Rp150.000</Text>
-              </CardItem>
-            </Card>
-            </TouchableOpacity>
-          </Col>
-          <Col style={style.col}>
-            <Card style={style.card}>
-              <CardItem cardBody style={{flexDirection: 'column', justifyContent: "flex-start"}}>
-                <View style={style.imageWrapper}>
-                  <Image source={imageHome} style={style.img} />
-                </View>
-                <View style={style.starWrapper}>
-                  <Image source={Star} style={style.star} />
-                  <Image source={Star} style={style.star} />
-                  <Image source={Star} style={style.star} />
-                  <Image source={Star} style={style.star} />
-                  <Image source={Star} style={style.star} />
-                </View>
-                <Text style={style.shop}>Zalora Cloth</Text>
-                <Text style={style.nameProduct}>Blouse</Text>
-                <Text style={style.priceProduct}>Rp150.000</Text>
-              </CardItem>
-            </Card>
-          </Col>
-          <Col style={style.col}>
-            <Card style={style.card}>
-              <CardItem cardBody style={{flexDirection: 'column', justifyContent: "flex-start"}}>
-                <View style={style.imageWrapper}>
-                  <Image source={imageHome} style={style.img} />
-                </View>
-                <View style={style.starWrapper}>
-                  <Image source={Star} style={style.star} />
-                  <Image source={Star} style={style.star} />
-                  <Image source={Star} style={style.star} />
-                  <Image source={Star} style={style.star} />
-                  <Image source={Star} style={style.star} />
-                </View>
-                <Text style={style.shop}>Zalora Cloth</Text>
-                <Text style={style.nameProduct}>Blouse</Text>
-                <Text style={style.priceProduct}>Rp150.000</Text>
-              </CardItem>
-            </Card>
-          </Col>
-        </Grid>
-        
-      </ScrollView>
-    )
-  }
-}
+  useEffect(
+    (id) => {
+      // const {id} = this.props.route.params;
+      dispatch(homeAction.categoryDetail(id));
+    },
+    [dispatch],
+  );
+
+  const pageProduct = (id) => {
+    navigation.navigate('PageProduct', {id});
+  };
+
+  const renderItem = ({item}) => (
+    <TouchableOpacity style={style.col} onPress={() => pageProduct(item.id)}>
+      <Card style={style.cardWrapper}>
+        <CardItem cardBody style={{flexDirection: 'column'}}>
+          <Image
+            source={{uri: `${API_URL}${item.picture1}`}}
+            style={style.cardImage}
+          />
+          <View style={style.contentCard}>
+            <View style={style.starWrapper}>
+              <Image source={Star} style={style.star} />
+              <Image source={Star} style={style.star} />
+              <Image source={Star} style={style.star} />
+              <Image source={Star} style={style.star} />
+              <Image source={Star} style={style.star} />
+            </View>
+            <Text style={style.shop}>Zalora Cloth</Text>
+            <Text style={style.nameProduct}>{item.name}</Text>
+            <Text style={style.priceProduct}>Rp {item.price}</Text>
+          </View>
+        </CardItem>
+      </Card>
+    </TouchableOpacity>
+  );
+
+  return (
+    <SafeAreaView style={style.parent}>
+      <View style={{flexDirection: 'row'}}>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default Catalog;
 
 const style = StyleSheet.create({
-  col: {
-    height: 300,
-    width: '50%'
+  parent: {
+    backgroundColor: 'white',
+    flex: 1,
   },
-  card: {
+  col: {
+    height: 310,
+    width: '50%',
+    backgroundColor: 'transparent',
+  },
+  cardWrapper: {
     width: '100%',
-    height: '100%'
+    marginRight: 10,
+    height: '98%',
+    padding: '2%',
+    shadowRadius: 0,
+    borderWidth: 0,
+    borderColor: 'white',
+  },
+  cardImage: {
+    height: 190,
+    width: '100%',
+  },
+  contentCard: {
+    width: '100%',
+  },
+  starWrapper: {
+    flexDirection: 'row',
+  },
+  star: {
+    width: 12,
+    height: 12,
   },
   imageWrapper: {
     height: 200,
-    width: '100%'
+    width: '100%',
   },
   img: {
     width: '100%',
@@ -134,14 +140,14 @@ const style = StyleSheet.create({
   },
   shop: {
     color: 'grey',
-    fontSize: 12
+    fontSize: 7,
   },
   nameProduct: {
-    fontSize: 18,
-    fontWeight: 'bold'
+    fontSize: 11,
+    fontWeight: 'bold',
   },
   priceProduct: {
-    fontSize: 16,
+    fontSize: 10,
     fontWeight: 'bold',
-  }
-})
+  },
+});

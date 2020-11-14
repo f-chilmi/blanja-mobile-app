@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {
   View,
   StyleSheet,
@@ -13,7 +14,7 @@ import {
   Fab,
   Card,
   CardItem,
-  Thumbnail,
+  Spinner,
   Button,
   Icon,
   Left,
@@ -24,60 +25,76 @@ import {
 import imageCard from '../assets/imageCard.png';
 import Star from '../assets/activated.png';
 
-export default class PageProduct extends Component {
+import productAction from '../redux/actions/product';
+import cartAction from '../redux/actions/cart';
+import store from '../redux/store';
+
+const API_URL = 'http://127.0.0.1:8080';
+
+class PageProduct extends Component {
+  componentDidMount() {
+    const {id} = this.props.route.params;
+    this.props.getProduct(id);
+  }
   myBag = () => {
     this.props.navigation.navigate('MyBag');
   };
 
   render() {
+    console.log(this.props);
+    const {id} = this.props.route.params;
+    const {data} = this.props.product;
     return (
       <SafeAreaView>
         <ScrollView>
-          <View style={{marginHorizontal: '2%', marginBottom: 25}}>
-            <View style={style.imageWrapper}>
-              <Image style={style.image} source={imageCard} />
-              <Image style={style.image} source={imageCard} />
-            </View>
-            <View />
+          {data == undefined && <Spinner />}
+          {!(data == undefined) && (
             <View>
-              <View style={{flexDirection: 'row'}}>
-                <Text style={style.nameProduct}>Blouse Wanita</Text>
-                <Text style={{marginLeft: 'auto', marginTop: 10}}>
-                  Rp150.000
+              <View style={{marginHorizontal: '2%', marginBottom: 25}}>
+                <View style={style.imageWrapper}>
+                  <Image
+                    source={{uri: `${API_URL}${data.picture1}`}}
+                    style={style.image}
+                  />
+                </View>
+                <View />
+                <View>
+                  <View style={{flexDirection: 'row'}}>
+                    <View style={{width: '60%'}}>
+                      <Text style={style.nameProduct}>{data.name}</Text>
+                    </View>
+                    <Text style={{marginLeft: 'auto', marginTop: 10}}>
+                      Rp{data.price}
+                    </Text>
+                  </View>
+
+                  <Text style={style.shopName}>Zalora Cloth</Text>
+                  <View style={style.starWrapper}>
+                    <Image source={Star} />
+                    <Image source={Star} />
+                    <Image source={Star} />
+                    <Image source={Star} />
+                    <Image source={Star} />
+                    <Text style={style.textRating}>
+                      ({data['AVG(rating)]']})
+                    </Text>
+                  </View>
+                  <Text style={style.descProduct}>{data.description}</Text>
+                </View>
+              </View>
+              <TouchableOpacity
+                block
+                activeOpacity={0.7}
+                style={style.addToCart}
+                onPress={this.myBag}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>
+                  ADD TO CART
                 </Text>
-              </View>
-
-              <Text style={style.shopName}>Zalora Cloth</Text>
-              <View style={style.starWrapper}>
-                <Image source={Star} />
-                <Image source={Star} />
-                <Image source={Star} />
-                <Image source={Star} />
-                <Image source={Star} />
-                <Text style={style.textRating}>(10)</Text>
-              </View>
-              <Text style={style.descProduct}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </Text>
+              </TouchableOpacity>
             </View>
-          </View>
-          <TouchableOpacity
-            block
-            activeOpacity={0.7}
-            style={style.addToCart}
-            onPress={this.myBag}>
-            <Text style={{color: 'white', fontWeight: 'bold'}}>
-              ADD TO CART
-            </Text>
-          </TouchableOpacity>
+          )}
 
-          <View>
+          {/* <View>
             <Text style={style.textUnderNew}>You've never seen it before!</Text>
             <View style={style.cardViewWrapper}>
               <TouchableOpacity onPress={this.pageProduct}>
@@ -128,7 +145,7 @@ export default class PageProduct extends Component {
                 </CardItem>
               </Card>
             </View>
-          </View>
+          </View> */}
         </ScrollView>
         <TouchableOpacity
           block
@@ -142,6 +159,20 @@ export default class PageProduct extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  product: state.product,
+  cart: state.cart,
+});
+
+const mapDispatchToProps = {
+  getProduct: productAction.getData,
+  postCart: cartAction.postCart,
+  getCart: cartAction.getCart,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PageProduct);
+
 const style = StyleSheet.create({
   imageWrapper: {
     height: 300,
@@ -149,11 +180,11 @@ const style = StyleSheet.create({
     flexDirection: 'row',
   },
   image: {
-    width: '70%',
+    width: '100%',
     height: '100%',
   },
   nameProduct: {
-    fontSize: 22,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   shopName: {

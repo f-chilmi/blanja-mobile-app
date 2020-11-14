@@ -3,14 +3,18 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '10.0'
 
-target 'blanja' do
+target 'Blanja' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
-  target 'blanjaTests' do
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+
+  target 'BlanjaTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -25,10 +29,10 @@ target 'blanja' do
   end
 end
 
-target 'blanja-tvOS' do
-  # Pods for blanja-tvOS
+target 'Blanja-tvOS' do
+  # Pods for Blanja-tvOS
 
-  target 'blanja-tvOSTests' do
+  target 'Blanja-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

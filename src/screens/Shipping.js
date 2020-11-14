@@ -33,18 +33,24 @@ class Shipping extends Component {
   addNewAddress = () => {
     this.props.navigation.navigate('NewAddress');
   };
-  changeAddress = () => {
-    this.props.navigation.navigate('ChangeAddress');
+  changeAddress = (id) => {
+    this.props.navigation.navigate('ChangeAddress', {id});
   };
   render() {
-    const {data, isLoading} = this.props.address;
-    console.log(!(data == undefined));
+    const {data} = this.props.address;
+    // console.log(this.props.address.data);
     return (
       <View style={style.parent}>
         <Text style={style.shippingText}>Shipping address</Text>
-        {!isLoading && !(data == undefined) && (
+        {data == undefined && <Spinner />}
+        {/* {!(this.props.address.data == undefined) && (
           <ScrollView>
-            {data.length !== 0 &&
+            {this.props.address.data.length > 0 && }
+          </ScrollView>
+        )} */}
+        {!(data == undefined) && (
+          <ScrollView>
+            {data.length > 0 &&
               data.map((item) => (
                 <Card>
                   <CardItem style={{flexDirection: 'column'}}>
@@ -52,7 +58,7 @@ class Shipping extends Component {
                       <View style={style.name}>
                         <Text>{item.recipientsName}</Text>
                       </View>
-                      <TouchableOpacity onPress={this.changeAddress}>
+                      <TouchableOpacity onPress={()=>this.changeAddress(item.id)}>
                         <Text style={style.change}>Change</Text>
                       </TouchableOpacity>
                     </View>
@@ -71,7 +77,6 @@ class Shipping extends Component {
             </Button>
           </ScrollView>
         )}
-        {isLoading && <Spinner />}
       </View>
     );
   }

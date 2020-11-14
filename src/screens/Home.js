@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import SplashScreen from 'react-native-splash-screen';
 // import {API_URL} from '@env';
 import {
   View,
@@ -7,7 +8,6 @@ import {
   Image,
   TouchableOpacity,
   Text,
-  SafeAreaView,
   ScrollView,
 } from 'react-native';
 import {
@@ -22,6 +22,7 @@ import {
   Left,
   Body,
   Right,
+  Spinner,
 } from 'native-base';
 
 import imageHome from '../assets/Image.png';
@@ -51,14 +52,13 @@ class Home extends Component {
   };
 
   componentDidMount() {
+    SplashScreen.hide();
     this.props.getHome();
     this.props.getPopular();
-    this.props.getCategory();
   }
 
-  pageProduct = () => {
-    this.props.navigation.navigate('PageProduct');
-    // console.log(id);
+  pageProduct = (id) => {
+    this.props.navigation.navigate('PageProduct', {id});
   };
 
   category = () => {
@@ -66,6 +66,7 @@ class Home extends Component {
   };
 
   render() {
+    console.log(this.props);
     const {
       isLoading,
       data,
@@ -76,12 +77,6 @@ class Home extends Component {
     } = this.props.home;
     return (
       <ScrollView>
-        {data == undefined && (
-          <div className="spinner-border text-danger text-center" role="status">
-            <span className="sr-only">Loading...</span>
-            <p>Loading...</p>
-          </div>
-        )}
         {!isLoading && !isError && !(data == undefined) && (
           <ScrollView style={style.parent}>
             <View style={style.imageHomeWrapper}>
@@ -89,89 +84,92 @@ class Home extends Component {
               <Text style={style.textHome}>Fashion Sale</Text>
             </View>
             <View>
-              <Text style={style.textNew}>New</Text>
-              <Text style={style.textUnderNew}>
-                You've never seen it before!
-              </Text>
-              <ScrollView horizontal style={style.cardViewWrapper}>
-                {data.length !== 0 &&
-                  data.map((item) => (
-                    <TouchableOpacity onPress={this.pageProduct}>
-                      <Card style={style.cardWrapper}>
-                        <CardItem cardBody style={{flexDirection: 'column'}}>
-                          <Image
-                            source={{uri: `${API_URL}${item.picture1}`}}
-                            style={style.cardImage}
-                          />
-                          <View style={style.contentCard}>
-                            <View style={style.starWrapper}>
-                              <Image source={Star} style={style.star} />
-                              <Image source={Star} style={style.star} />
-                              <Image source={Star} style={style.star} />
-                              <Image source={Star} style={style.star} />
-                              <Image source={Star} style={style.star} />
+              <View style={style.child}>
+                <View style={style.wrapper}>
+                  <Text style={style.textNew}>New</Text>
+                  <TouchableOpacity style={style.rightTextWrap}>
+                    <Text style={style.rightText}>View all</Text>
+                  </TouchableOpacity>
+                </View>
+                <Text style={style.textUnderNew}>
+                  You've never seen it before!
+                </Text>
+                <ScrollView horizontal style={style.cardViewWrapper}>
+                  {data.length !== 0 &&
+                    data.map((item) => (
+                      <TouchableOpacity key={item.id.toString().concat(item.name)} onPress={()=>this.pageProduct(item.id)}>
+                        <Card style={style.cardWrapper}>
+                          <CardItem cardBody style={{flexDirection: 'column'}}>
+                            <Image
+                              source={{uri: `${API_URL}${item.picture1}`}}
+                              style={style.cardImage}
+                            />
+                            <View style={style.contentCard}>
+                              <View style={style.starWrapper}>
+                                <Image source={Star} style={style.star} />
+                                <Image source={Star} style={style.star} />
+                                <Image source={Star} style={style.star} />
+                                <Image source={Star} style={style.star} />
+                                <Image source={Star} style={style.star} />
+                              </View>
+                              <Text style={style.shop}>Zalora Cloth</Text>
+                              <Text style={style.nameProduct}>{item.name}</Text>
+                              <Text style={style.priceProduct}>
+                                Rp {item.price}
+                              </Text>
                             </View>
-                            <Text style={style.shop}>Zalora Cloth</Text>
-                            <Text style={style.nameProduct}>{item.name}</Text>
-                            <Text style={style.proceProduct}>
-                              Rp {item.price}
-                            </Text>
-                          </View>
-                        </CardItem>
-                      </Card>
-                    </TouchableOpacity>
-                  ))}
-              </ScrollView>
-            </View>
+                          </CardItem>
+                        </Card>
+                      </TouchableOpacity>
+                    ))}
+                </ScrollView>
+              </View>
 
-            <View>
-              <Text style={style.textNew}>Popular</Text>
-              <Text style={style.textUnderNew}>
-                You've never seen it before!
-              </Text>
-              <ScrollView horizontal style={style.cardViewWrapper}>
-                {data.length !== 0 &&
-                  dataPopular.map((item) => (
-                    <TouchableOpacity onPress={this.pageProduct}>
-                      <Card style={style.cardWrapper}>
-                        <CardItem cardBody style={{flexDirection: 'column'}}>
-                          <Image
-                            source={{uri: `${API_URL}${item.picture1}`}}
-                            // source={{uri: `${API_URL}${item.picture1}`,}}
-                            style={style.cardImage}
-                          />
-                          <View style={style.contentCard}>
-                            <View style={style.starWrapper}>
-                              <Image source={Star} style={style.star} />
-                              <Image source={Star} style={style.star} />
-                              <Image source={Star} style={style.star} />
-                              <Image source={Star} style={style.star} />
-                              <Image source={Star} style={style.star} />
+              <View>
+                <View style={style.wrapper}>
+                  <Text style={style.textNew}>Popular</Text>
+                  <TouchableOpacity style={style.rightTextWrap}>
+                    <Text style={style.rightText}>View all</Text>
+                  </TouchableOpacity>
+                </View>
+                <Text style={style.textUnderNew}>
+                  You've never seen it before!
+                </Text>
+                <ScrollView horizontal style={style.cardViewWrapper}>
+                  {data.length !== 0 &&
+                    dataPopular.map((item) => (
+                      <TouchableOpacity key={item.id.toString().concat(item.name)} onPress={()=>this.pageProduct(item.id)}>
+                        <Card style={style.cardWrapper}>
+                          <CardItem cardBody style={{flexDirection: 'column'}}>
+                            <Image
+                              source={{uri: `${API_URL}${item.picture1}`}}
+                              // source={{uri: `${API_URL}${item.picture1}`,}}
+                              style={style.cardImage}
+                            />
+                            <View style={style.contentCard}>
+                              <View style={style.starWrapper}>
+                                <Image source={Star} style={style.star} />
+                                <Image source={Star} style={style.star} />
+                                <Image source={Star} style={style.star} />
+                                <Image source={Star} style={style.star} />
+                                <Image source={Star} style={style.star} />
+                              </View>
+                              <Text style={style.shop}>Zalora Cloth</Text>
+                              <Text style={style.nameProduct}>{item.name}</Text>
+                              <Text style={style.priceProduct}>
+                                Rp {item.price}
+                              </Text>
                             </View>
-                            <Text style={style.shop}>Zalora Cloth</Text>
-                            <Text style={style.nameProduct}>{item.name}</Text>
-                            <Text style={style.proceProduct}>
-                              Rp {item.price}
-                            </Text>
-                          </View>
-                        </CardItem>
-                      </Card>
-                    </TouchableOpacity>
-                  ))}
-              </ScrollView>
+                          </CardItem>
+                        </Card>
+                      </TouchableOpacity>
+                    ))}
+                </ScrollView>
+              </View>
             </View>
           </ScrollView>
         )}
-        {isLoading && !isError && data === 'undefined' && (
-          <div className="spinner-border text-danger text-center" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
-        )}
-        {!isLoading && !isError && data === 'undefined' && (
-          <div className="spinner-border text-danger text-center" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
-        )}
+        {dataPopular == undefined && <Spinner />}
       </ScrollView>
     );
   }
@@ -185,14 +183,16 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   getHome: homeAction.getData,
   getPopular: homeAction.getPopular,
-  getCategory: homeAction.getCategory,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
 
 const style = StyleSheet.create({
   parent: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
+  },
+  child: {
+    padding: '2%',
   },
   imageHomeWrapper: {
     height: 400,
@@ -201,6 +201,11 @@ const style = StyleSheet.create({
   imageHome: {
     height: 400,
     position: 'relative',
+  },
+  wrapper: {
+    flexDirection: 'row',
+    alignContent: 'center',
+    marginTop: 20,
   },
   textHome: {
     position: 'absolute',
@@ -213,49 +218,49 @@ const style = StyleSheet.create({
   contentCard: {
     width: '100%',
   },
+  nameProduct: {
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
+  priceProduct: {
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  rightText: {
+    marginTop: 20,
+    color: 'grey',
+    fontSize: 13,
+  },
+  rightTextWrap: {
+    marginLeft: 'auto',
+  },
   textNew: {
     fontSize: 30,
     position: 'relative',
     marginLeft: '2%',
-    marginTop: 20,
+    width: '50%',
   },
   textUnderNew: {
     fontSize: 11,
     color: '#9B9B9B',
     marginLeft: '2%',
   },
-  category: {
-    marginTop: 10,
-    height: 240,
-    flexDirection: 'row',
-    backgroundColor: 'grey',
-  },
-  cardCategoryWrapper: {
-    width: 180,
-  },
-  cardCategoryImage: {
-    width: '100%',
-    height: '100%',
-  },
-  textCategory: {
-    position: 'absolute',
-    bottom: 70,
-    color: 'tomato',
-    fontWeight: 'bold',
-    fontSize: 24,
-  },
   cardViewWrapper: {
-    height: 380,
+    height: 315,
     flexDirection: 'row',
   },
   cardWrapper: {
     width: 150,
     marginRight: 10,
     height: '98%',
-    padding: '2%'
+    padding: '2%',
+    shadowRadius: 0,
+    borderWidth: 0,
+    borderColor: 'white',
   },
   cardImage: {
     height: 190,
+    width: '100%',
   },
   starWrapper: {
     flexDirection: 'row',
@@ -266,6 +271,6 @@ const style = StyleSheet.create({
   },
   shop: {
     color: 'grey',
-    fontSize: 12,
+    fontSize: 7,
   },
 });

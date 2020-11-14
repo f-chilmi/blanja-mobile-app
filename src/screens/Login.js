@@ -38,7 +38,7 @@ class Login extends Component {
   }
 
   render() {
-    console.log(this.props)
+    // console.log(this.props)
     return (
       <View style={style.parent}>
         <View style={style.signupWrapper}>

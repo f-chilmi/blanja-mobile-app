@@ -25,7 +25,7 @@ class Register extends Component {
   };
 
   signup = () => {
-    this.props.navigation.navigate('Home');
+    // this.props.navigation.navigate('Home');
     const {name, email, password} = this.state;
     if (name && email && password) {
       const data = {name, email, password};

@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "blanja.app"
-               BlueprintName = "blanja"
-               ReferencedContainer = "container:blanja.xcodeproj">
+               BuildableName = "Blanja.app"
+               BlueprintName = "Blanja"
+               ReferencedContainer = "container:Blanja.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "blanjaTests.xctest"
-               BlueprintName = "blanjaTests"
-               ReferencedContainer = "container:blanja.xcodeproj">
+               BuildableName = "BlanjaTests.xctest"
+               BlueprintName = "BlanjaTests"
+               ReferencedContainer = "container:Blanja.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "blanja.app"
-            BlueprintName = "blanja"
-            ReferencedContainer = "container:blanja.xcodeproj">
+            BuildableName = "Blanja.app"
+            BlueprintName = "Blanja"
+            ReferencedContainer = "container:Blanja.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "blanja.app"
-            BlueprintName = "blanja"
-            ReferencedContainer = "container:blanja.xcodeproj">
+            BuildableName = "Blanja.app"
+            BlueprintName = "Blanja"
+            ReferencedContainer = "container:Blanja.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
