@@ -2,7 +2,7 @@ import http from '../../helpers/http';
 
 export default {
   getData: (id) => ({
-    type: 'GET_DATA',
+    type: 'GET_PRODUCT',
     payload: http().get(`/public/items/${id}`),
   }),
   increaseCount: {

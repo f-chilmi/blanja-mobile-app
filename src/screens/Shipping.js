@@ -7,8 +7,9 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import {Button, Card, CardItem, Spinner} from 'native-base';
+import {Button, Card, CardItem, Spinner, Item, Input} from 'native-base';
 import {connect} from 'react-redux';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import store from '../redux/store';
 import addressAction from '../redux/actions/address';
 import profileAction from '../redux/actions/profile';
@@ -41,6 +42,10 @@ class Shipping extends Component {
     // console.log(this.props.address.data);
     return (
       <View style={style.parent}>
+        <Item searchbar rounded>
+          <Icon style={{marginLeft: 15}} name="search" size={20} color="grey" />
+          <Input style={{marginLeft: 10}} placeholder="Search" />
+        </Item>
         <Text style={style.shippingText}>Shipping address</Text>
         {data == undefined && <Spinner />}
         {/* {!(this.props.address.data == undefined) && (
@@ -58,25 +63,23 @@ class Shipping extends Component {
                       <View style={style.name}>
                         <Text>{item.recipientsName}</Text>
                       </View>
-                      <TouchableOpacity onPress={()=>this.changeAddress(item.id)}>
+                      <TouchableOpacity
+                        onPress={() => this.changeAddress(item.id)}>
                         <Text style={style.change}>Change</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={style.address}>
-                      <Text>{item.address}</Text>
-                      <Text>+62 {item.recipientsPhone}</Text>
+                      <Text style={style.addresstext}>{item.address}</Text>
+                      <Text style={style.addresstext}>+62 {item.recipientsPhone}</Text>
                     </View>
                   </CardItem>
                 </Card>
               ))}
-            <Button
-              block
-              style={style.buttonCheckOut}
-              onPress={this.addNewAddress}>
-              <Text style={style.textCheckOut}>ADD NEW ADDRESS</Text>
-            </Button>
           </ScrollView>
         )}
+        <Button block style={style.buttonCheckOut} onPress={this.addNewAddress}>
+          <Text style={style.textCheckOut}>ADD NEW ADDRESS</Text>
+        </Button>
       </View>
     );
   }
@@ -85,6 +88,7 @@ class Shipping extends Component {
 const style = StyleSheet.create({
   parent: {
     padding: '3%',
+    flex: 1,
   },
   shippingText: {
     marginVertical: 10,
@@ -103,13 +107,16 @@ const style = StyleSheet.create({
   address: {
     width: '100%',
   },
+  addresstext: {
+    fontSize: 12,
+  },
   buttonCheckOut: {
     backgroundColor: 'transparent',
     borderRadius: 30,
     borderWidth: 1,
     borderColor: 'black',
-    marginTop: 15,
-    marginBottom: 15,
+    marginTop: 8,
+    marginBottom: 0,
   },
   textCheckOut: {
     color: 'black',

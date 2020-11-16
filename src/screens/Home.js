@@ -66,22 +66,23 @@ class Home extends Component {
     this.props.navigation.navigate('Category');
   };
   allNew = () => {
-    this.props.navigation.navigate('Catalog');
+    this.props.navigation.navigate('Catalog', {id: ' '});
   };
   allPopular = () => {
     this.props.navigation.navigate('Catalog2');
   };
 
   render() {
-    console.log(this.props);
+    // console.log(this.props);
     const {
       isLoading,
-      data,
       dataPopular,
+      // data,
       isError,
       alertMsg,
       categoryList,
     } = this.props.home;
+    const data = this.props.home.dataAll;
     return (
       <ScrollView>
         {data !== undefined && (

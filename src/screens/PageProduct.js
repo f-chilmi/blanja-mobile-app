@@ -22,8 +22,8 @@ import {
   Right,
 } from 'native-base';
 
-import imageCard from '../assets/imageCard.png';
-import Star from '../assets/activated.png';
+import Star from '../assets/Star.png';
+import Activated from '../assets/activated.png';
 
 import productAction from '../redux/actions/product';
 import cartAction from '../redux/actions/cart';
@@ -41,11 +41,11 @@ class PageProduct extends Component {
   };
 
   render() {
-    console.log(this.props);
+    // console.log(this.props);
     const {id} = this.props.route.params;
     const {data} = this.props.product;
     return (
-      <SafeAreaView>
+      <SafeAreaView style={style.parent}>
         <ScrollView>
           {data == undefined && <Spinner />}
           {!(data == undefined) && (
@@ -70,19 +70,54 @@ class PageProduct extends Component {
 
                   <Text style={style.shopName}>Zalora Cloth</Text>
                   <View style={style.starWrapper}>
-                    <Image source={Star} />
-                    <Image source={Star} />
-                    <Image source={Star} />
-                    <Image source={Star} />
-                    <Image source={Star} />
-                    <Text style={style.textRating}>
-                      ({data['AVG(rating)]']})
-                    </Text>
+                    {data['AVG(rating)]'] < 0.5 &&
+                      Array(5).fill(<Image source={Star} style={style.star} />)}
+                    {data['AVG(rating)]'] >= 0.5 &&
+                      data['AVG(rating)]'] < 1.5 &&
+                      Array(1).fill(
+                        <Image source={Activated} style={style.star} />,
+                      )}
+                    {data['AVG(rating)]'] > 0 &&
+                      data['AVG(rating)]'] < 1.5 &&
+                      Array(4).fill(<Image source={Star} style={style.star} />)}
+                    {data['AVG(rating)]'] >= 1.5 &&
+                      data['AVG(rating)]'] < 2.5 &&
+                      Array(2).fill(
+                        <Image source={Activated} style={style.star} />,
+                      )}
+                    {data['AVG(rating)]'] >= 1.5 &&
+                      data['AVG(rating)]'] < 2.5 &&
+                      Array(3).fill(<Image source={Star} style={style.star} />)}
+                    {data['AVG(rating)]'] >= 2.5 &&
+                      data['AVG(rating)]'] < 3.5 &&
+                      Array(3).fill(
+                        <Image source={Activated} style={style.star} />,
+                      )}
+                    {data['AVG(rating)]'] >= 2.5 &&
+                      data['AVG(rating)]'] < 3.5 &&
+                      Array(2).fill(<Image source={Star} style={style.star} />)}
+                    {data['AVG(rating)]'] >= 3.5 &&
+                      data['AVG(rating)]'] < 4.5 &&
+                      Array(4).fill(
+                        <Image source={Activated} style={style.star} />,
+                      )}
+                    {data['AVG(rating)]'] >= 3.5 &&
+                      data['AVG(rating)]'] < 4.5 &&
+                      Array(1).fill(<Image source={Star} style={style.star} />)}
+                    {data['AVG(rating)]'] >= 4.5 &&
+                      Array(5).fill(
+                        <Image source={Activated} style={style.star} />,
+                      )}
+                    {data['AVG(rating)]'] > 0 ? (
+                      <Text style={style.textRating}> ({data['AVG(rating)]']})</Text>
+                    ) : (
+                      <Text style={style.textRating}> (0)</Text>
+                    )}
                   </View>
                   <Text style={style.descProduct}>{data.description}</Text>
                 </View>
               </View>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 block
                 activeOpacity={0.7}
                 style={style.addToCart}
@@ -90,70 +125,19 @@ class PageProduct extends Component {
                 <Text style={{color: 'white', fontWeight: 'bold'}}>
                   ADD TO CART
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           )}
-
-          {/* <View>
-            <Text style={style.textUnderNew}>You've never seen it before!</Text>
-            <View style={style.cardViewWrapper}>
-              <TouchableOpacity onPress={this.pageProduct}>
-                <Card style={style.cardWrapper}>
-                  <CardItem cardBody style={{flexDirection: 'column'}}>
-                    <Image source={imageCard} style={style.cardImage} />
-                    <View style={style.starWrapper}>
-                      <Image source={Star} style={style.star} />
-                      <Image source={Star} style={style.star} />
-                      <Image source={Star} style={style.star} />
-                      <Image source={Star} style={style.star} />
-                      <Image source={Star} style={style.star} />
-                    </View>
-                    <Text style={style.shop}>Zalora Cloth</Text>
-                    <Text style={style.nameProduct}>Blouse</Text>
-                    <Text style={style.proceProduct}>30$</Text>
-                  </CardItem>
-                </Card>
-              </TouchableOpacity>
-              <Card style={style.cardWrapper}>
-                <CardItem cardBody style={{flexDirection: 'column'}}>
-                  <Image source={imageCard} style={style.cardImage} />
-                  <View style={style.starWrapper}>
-                    <Image source={Star} style={style.star} />
-                    <Image source={Star} style={style.star} />
-                    <Image source={Star} style={style.star} />
-                    <Image source={Star} style={style.star} />
-                    <Image source={Star} style={style.star} />
-                  </View>
-                  <Text style={style.shop}>Zalora Cloth</Text>
-                  <Text style={style.nameProduct}>Blouse</Text>
-                  <Text style={style.proceProduct}>30$</Text>
-                </CardItem>
-              </Card>
-              <Card style={style.cardWrapper}>
-                <CardItem cardBody style={{flexDirection: 'column'}}>
-                  <Image source={imageCard} style={style.cardImage} />
-                  <View style={style.starWrapper}>
-                    <Image source={Star} style={style.star} />
-                    <Image source={Star} style={style.star} />
-                    <Image source={Star} style={style.star} />
-                    <Image source={Star} style={style.star} />
-                    <Image source={Star} style={style.star} />
-                  </View>
-                  <Text style={style.shop}>Zalora Cloth</Text>
-                  <Text style={style.nameProduct}>Blouse</Text>
-                  <Text style={style.proceProduct}>30$</Text>
-                </CardItem>
-              </Card>
-            </View>
-          </View> */}
         </ScrollView>
-        <TouchableOpacity
-          block
-          activeOpacity={0.7}
-          style={style.addToCart}
-          onPress={this.myBag}>
-          <Text style={{color: 'white', fontWeight: 'bold'}}>ADD TO CART</Text>
-        </TouchableOpacity>
+        <View >
+          <TouchableOpacity
+            block
+            activeOpacity={0.7}
+            style={style.addToCart}
+            onPress={this.myBag}>
+            <Text style={{color: 'white', fontWeight: 'bold'}}>ADD TO CART</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     );
   }
@@ -174,6 +158,10 @@ const mapDispatchToProps = {
 export default connect(mapStateToProps, mapDispatchToProps)(PageProduct);
 
 const style = StyleSheet.create({
+  parent: {
+    flex: 1,
+    backgroundColor: 'white'
+  },
   imageWrapper: {
     height: 300,
     backgroundColor: 'grey',
@@ -193,7 +181,11 @@ const style = StyleSheet.create({
   },
   starWrapper: {
     flexDirection: 'row',
-    marginVertical: 8,
+    // marginVertical: 8,
+  },
+  star: {
+    width: 12,
+    height: 12,
   },
   textRating: {
     fontSize: 9,
@@ -220,13 +212,6 @@ const style = StyleSheet.create({
   cardImage: {
     height: 190,
   },
-  starWrapper: {
-    flexDirection: 'row',
-  },
-  star: {
-    width: 12,
-    height: 12,
-  },
   shop: {
     color: 'grey',
     fontSize: 12,
@@ -240,5 +225,6 @@ const style = StyleSheet.create({
     width: '96%',
     marginLeft: '2%',
     marginRight: '2%',
+    marginVertical: 10
   },
 });

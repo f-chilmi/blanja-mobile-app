@@ -8,12 +8,11 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import {Card, CardItem, Body, Button, Spinner} from 'native-base';
+import {Card, CardItem, Body, Button, Spinner, Fab} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 
 import cartAction from '../redux/actions/cart';
-import store from '../redux/store';
 
 const API_URL = 'http://127.0.0.1:8080';
 
@@ -21,6 +20,7 @@ class MyBag extends Component {
   state = {
     data: [],
     totalPrice: '',
+    fab: false,
   };
   componentDidMount() {
     this.props.getCart(this.props.auth.token);
@@ -64,7 +64,7 @@ class MyBag extends Component {
     };
     console.log(updateQty);
     this.setState({data, totalPrice});
-    store.dispatch(cartAction.updateCart(this.props.auth.token, updateQty));
+    this.props.updateCart(this.props.auth.token, updateQty);
   };
 
   IncreaseItem = (i) => {
@@ -84,7 +84,7 @@ class MyBag extends Component {
     };
     console.log(updateQty);
     this.setState({data, totalPrice});
-    store.dispatch(cartAction.updateCart(this.props.auth.token, updateQty));
+    this.props.updateCart(this.props.auth.token, updateQty);
   };
 
   checkout = () => {
@@ -94,14 +94,16 @@ class MyBag extends Component {
   render() {
     const {data} = this.state;
     return (
-      <View style={style.parent}>
+      <SafeAreaView style={style.parent}>
         {this.props.cart.data.data == undefined && <Spinner />}
         {!(data == undefined) && (
           <ScrollView>
             <Text style={style.title}>My Bag</Text>
             {data.length !== 0 &&
               data.map((item, index) => (
-                <Card style={style.card} key={item.id.toString().concat(item.category)}>
+                <Card
+                  style={style.card}
+                  key={item.id.toString().concat(item.category)}>
                   <CardItem cardBody>
                     <Body style={style.body}>
                       <View style={style.imageWrap}>
@@ -126,6 +128,18 @@ class MyBag extends Component {
                             style={{marginLeft: 'auto', marginTop: 10}}>
                             <Icon name="ellipsis-v" size={15} />
                           </TouchableOpacity>
+                          {/* <Fab
+                            active={this.state.fab}
+                            direction="left"
+                            // containerStyle={{ }}
+                            style={{marginTop: 10}}
+                            position="topRight"
+                            onPress={() => this.setState({ fab: !this.state.fab })}>
+                            <Icon name="ellipsis-v" size={15} />
+                            <Button>
+                              <Icon name="share"/>
+                            </Button>
+                          </Fab> */}
                         </View>
                         <View style={style.qtyNPrice}>
                           <View style={style.qty}>
@@ -152,25 +166,25 @@ class MyBag extends Component {
                   </CardItem>
                 </Card>
               ))}
-            <Card>
-              <CardItem style={{flexDirection: 'column'}}>
-                <View style={style.wrapper}>
-                  <Text style={style.textGrey}>Total amount:</Text>
-                  <Text style={style.textPrice}>Rp{this.state.totalPrice}</Text>
-                </View>
-                <View style={style.buttonBlock}>
-                  <Button
-                    block
-                    style={style.buttonCheckOut}
-                    onPress={this.checkout}>
-                    <Text style={style.textCheckOut}>CHECK OUT</Text>
-                  </Button>
-                </View>
-              </CardItem>
-            </Card>
           </ScrollView>
         )}
-      </View>
+        <View>
+          <CardItem style={{flexDirection: 'column'}}>
+            <View style={style.wrapper}>
+              <Text style={style.textGrey}>Total amount:</Text>
+              <Text style={style.textPrice}>Rp{this.state.totalPrice}</Text>
+            </View>
+            <View style={style.buttonBlock}>
+              <Button
+                block
+                style={style.buttonCheckOut}
+                onPress={this.checkout}>
+                <Text style={style.textCheckOut}>CHECK OUT</Text>
+              </Button>
+            </View>
+          </CardItem>
+        </View>
+      </SafeAreaView>
     );
   }
 }
@@ -181,6 +195,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = {
   getCart: cartAction.getCart,
+  updateCart: cartAction.updateCart,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyBag);
@@ -189,6 +204,7 @@ const style = StyleSheet.create({
   parent: {
     backgroundColor: 'white',
     padding: '3%',
+    flex: 1,
   },
   title: {
     marginTop: 25,
@@ -262,11 +278,12 @@ const style = StyleSheet.create({
     fontSize: 11,
   },
   textGrey: {
-    fontSize: 15,
+    fontSize: 13,
     color: 'grey',
   },
   textPrice: {
     marginLeft: 'auto',
+    fontSize: 12
   },
   buttonBlock: {
     width: '100%',

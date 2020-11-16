@@ -48,7 +48,7 @@ const Catalog = ({navigation}) => {
   };
 
   const renderItem = ({item}) => (
-    <TouchableOpacity style={style.col} onPress={() => pageProduct(item.id)}>
+    <TouchableOpacity style={style.col} key={item.id.toString().concat(item.name)} onPress={() => pageProduct(item.id)}>
       <Card style={style.cardWrapper}>
         <CardItem cardBody style={{flexDirection: 'column'}}>
           <Image
@@ -162,13 +162,6 @@ const style = StyleSheet.create({
   img: {
     width: '100%',
     height: '100%',
-  },
-  starWrapper: {
-    flexDirection: 'row',
-  },
-  star: {
-    width: 12,
-    height: 12,
   },
   shop: {
     color: 'grey',

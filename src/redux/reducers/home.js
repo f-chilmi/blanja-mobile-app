@@ -1,5 +1,6 @@
 const initialState = {
   data: [],
+  dataAll: [],
   dataPopular: [],
   allData: [],
   categoryList: [],
@@ -31,7 +32,7 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: false,
-        data: action.payload.data.info,
+        dataAll: action.payload.data.info,
       };
     }
     case 'POPULAR_PENDING': {

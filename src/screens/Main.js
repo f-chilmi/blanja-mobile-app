@@ -44,12 +44,26 @@ const HomeStack = () => {
         component={PageProduct}
       />
       <Stack.Screen
-        options={{title: 'Catalog'}}
+        options={{
+          title: 'Catalog',
+          headerRight: () => (
+            <TouchableOpacity>
+              <Icon name="search" size={20} style={{marginRight: 10}} />
+            </TouchableOpacity>
+          ),
+        }}
         name="Catalog"
         component={Catalog}
       />
       <Stack.Screen
-        options={{title: 'Catalog'}}
+        options={{
+          title: 'Catalog',
+          headerRight: () => (
+            <TouchableOpacity>
+              <Icon name="search" size={20} style={{marginRight: 10}} />
+            </TouchableOpacity>
+          ),
+        }}
         name="Catalog2"
         component={Catalog2}
       />
@@ -94,7 +108,7 @@ const CategoryStack = () => {
               <Icon name="search" size={20} style={{marginRight: 10}} />
             </TouchableOpacity>
           ),
-          title: '',
+          title: 'Categories',
         }}
         name="Category"
         component={Category}
@@ -105,7 +119,14 @@ const CategoryStack = () => {
         component={PageProduct}
       />
       <Stack.Screen
-        // options={{title: 'Page product'}}
+        options={{
+          title: '',
+          headerRight: () => (
+            <TouchableOpacity>
+              <Icon name="search" size={20} style={{marginRight: 10}} />
+            </TouchableOpacity>
+          ),
+        }}
         name="Catalog"
         component={Catalog}
       />
@@ -149,8 +170,8 @@ const Shippingstack = () => {
         component={NewAddress}
       />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
 class Main extends Component {
   state = {};

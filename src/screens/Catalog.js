@@ -32,26 +32,25 @@ const API_URL = 'http://127.0.0.1:8080';
 import Star from '../assets/Star.png';
 import Activated from '../assets/activated.png';
 
-const Catalog = ({navigation}) => {
+const Catalog = ({route, navigation}) => {
   // const history = useHistory()
   const dispatch = useDispatch();
   const home = useSelector((state) => state.home);
   const data = home.dataCatalog;
-
-  useEffect(
-    (id) => {
-      // const {id} = this.props.route.params;
-      dispatch(homeAction.categoryDetail(id));
-    },
-    [dispatch],
-  );
+  const {id} = route.params;
+  useEffect(() => {
+    dispatch(homeAction.categoryDetail(id));
+  }, [dispatch]);
 
   const pageProduct = (id) => {
     navigation.navigate('PageProduct', {id});
   };
 
   const renderItem = ({item}) => (
-    <TouchableOpacity style={style.col} onPress={() => pageProduct(item.id)}>
+    <TouchableOpacity
+      style={style.col}
+      key={item.id.toString().concat(item.name)}
+      onPress={() => pageProduct(item.id)}>
       <Card style={style.cardWrapper}>
         <CardItem cardBody style={{flexDirection: 'column'}}>
           <Image
@@ -111,6 +110,20 @@ const Catalog = ({navigation}) => {
 
   return (
     <SafeAreaView style={style.parent}>
+      <View style={style.advFunc}>
+        <TouchableOpacity>
+          <View style={style.advFuncIcon}>
+            <Icon type="MaterialIcons" name="sort" />
+            <Text style={style.subtitle}>{' '}Filters</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View style={style.advFuncIcon}>
+            <Icon type="MaterialIcons" name="sort" />
+            <Text style={style.subtitle}>{' '}Price: lowest to high</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
       <View style={{flexDirection: 'row'}}>
         <FlatList
           data={data}
@@ -166,13 +179,6 @@ const style = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  starWrapper: {
-    flexDirection: 'row',
-  },
-  star: {
-    width: 12,
-    height: 12,
-  },
   shop: {
     color: 'grey',
     fontSize: 7,
@@ -184,5 +190,21 @@ const style = StyleSheet.create({
   priceProduct: {
     fontSize: 10,
     fontWeight: 'bold',
+  },
+  subtitle: {
+    fontSize: 12,
+  },
+  advFunc: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingTop: 8,
+    backgroundColor: '#ffff',
+  },
+  advFuncIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
   },
 });

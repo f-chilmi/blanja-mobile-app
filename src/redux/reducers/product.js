@@ -8,13 +8,13 @@ const initialState = {
 
 export default (state=initialState, action)=>{
   switch(action.type){
-    case 'GET_DATA_PENDING' : {
+    case 'GET_PRODUCT_PENDING' : {
       return {
         ...state,
         isLoading: true
       }
     }
-    case 'GET_DATA_REJECTED': {
+    case 'GET_PRODUCT_REJECTED': {
       return {
         ...state,
         isLoading: false,
@@ -22,11 +22,11 @@ export default (state=initialState, action)=>{
         alertMsg: 'There is an error at request data'
       }
     }
-    case 'GET_DATA_FULFILLED': {
+    case 'GET_PRODUCT_FULFILLED': {
       return {
         ...state,
         isLoading: false,
-        data: action.payload.data.data
+        data: action.payload.data.data,
       }
     }
     case 'INCREASE_COUNTER': {

@@ -22,13 +22,14 @@ class Category extends Component {
     this.props.getCategory();
   };
   allItem = () => {
-    this.props.navigation.navigate('Catalog');
+    this.props.navigation.navigate('Catalog2');
   };
   pageProduct = (id) => {
     this.props.navigation.navigate('PageProduct', {id});
   };
   catalogProduct = (id) => {
     this.props.navigation.navigate('Catalog', {id})
+    console.log(id)
   }
   render() {
     const {categoryList} = this.props.home;
@@ -39,7 +40,7 @@ class Category extends Component {
           block
           activeOpacity={0.7}
           style={style.buttonBlock}
-          onPress={()=>this.catalogProduct()}>
+          onPress={this.allItem}>
           <Text style={{color: 'white', fontWeight: 'bold'}}>
             SHOW ALL ITEMS
           </Text>
@@ -49,14 +50,9 @@ class Category extends Component {
             categoryList.map((item) => (
               <TouchableOpacity key={item.id.toString().concat(item.category)} onPress={()=>this.catalogProduct(item.id)}>
                 <Card style={style.card}>
-                  <CardItem style={{width: '100%', height: '100%'}}>
+                  <CardItem style={style.cardItem}>
                     <Text style={style.categoryName}>{item.category}</Text>
-                    <View
-                      style={{
-                        width: '50%',
-                        marginLeft: 'auto',
-                        backgroundColor: `${item.backgroundColor}`,
-                      }}>
+                    <View style={style.imageWrapper}>
                       <Image
                         source={{uri: `${API_URL}${item.image}`}}
                         style={style.img}
@@ -79,6 +75,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   getCategory: homeAction.getCategory,
+  categoryDetail: homeAction.categoryDetail,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Category);
@@ -86,26 +83,33 @@ export default connect(mapStateToProps, mapDispatchToProps)(Category);
 const style = StyleSheet.create({
   parent: {
     backgroundColor: 'white',
+    flex: 1,
   },
   buttonBlock: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 30,
+    height: 40,
     backgroundColor: '#DB3022',
     borderRadius: 30,
     width: '96%',
     marginLeft: '2%',
     marginRight: '2%',
-    marginTop: 5,
-    marginBottom: 5,
+    marginTop: 7,
+    marginBottom: 7,
   },
   card: {
-    height: 200,
-    backgroundColor: 'tomato',
+    height: 150,
+    // backgroundColor: 'tomato',
+    padding: 0,
   },
   cardItem: {
     width: '100%',
     height: '100%',
+  },
+  imageWrapper: {
+    width: '50%',
+    marginLeft: 'auto',
+    // backgroundColor: 'grey',
   },
   categoryName: {
     fontSize: 18,
