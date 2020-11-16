@@ -13,6 +13,7 @@ import Home from './Home';
 import PageProduct from './PageProduct';
 import Category from './Category';
 import Catalog from './Catalog';
+import Catalog2 from './Catalog2';
 import MyBag from './MyBag';
 import Checkout from './Checkout';
 import Shipping from './Shipping';
@@ -21,7 +22,6 @@ import ChangeAddress from './ChangeAddress';
 import Profile from './Profile';
 import Setting from './Setting';
 import Search from './Search';
-import Splash from './Splash';
 
 import {connect} from 'react-redux';
 
@@ -42,6 +42,16 @@ const HomeStack = () => {
         options={{title: 'Page product'}}
         name="PageProduct"
         component={PageProduct}
+      />
+      <Stack.Screen
+        options={{title: 'Catalog'}}
+        name="Catalog"
+        component={Catalog}
+      />
+      <Stack.Screen
+        options={{title: 'Catalog'}}
+        name="Catalog2"
+        component={Catalog2}
       />
     </Stack.Navigator>
   );
@@ -179,13 +189,13 @@ class Main extends Component {
             <BottomTabs.Screen
               options={{
                 tabBarIcon: ({size, color, focused}) => (
-                  <Icon name="shopping-bag" size={28} color="#900" />
+                  <Icon name="shopping-bag" size={25} color={color} />
                 ),
               }}
               name="MyBag"
               component={MyBagStack}
             />
-            <BottomTabs.Screen
+            {/* <BottomTabs.Screen
               options={{
                 tabBarIcon: ({size, color, focused}) => (
                   <Icon name="heart" size={25} color={color} />
@@ -193,7 +203,7 @@ class Main extends Component {
               }}
               name="Shipping"
               component={Shippingstack}
-            />
+            /> */}
             <BottomTabs.Screen
               options={{
                 tabBarIcon: ({size, color, focused}) => (

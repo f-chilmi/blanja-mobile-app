@@ -30,6 +30,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        isError: false,
         data: action.payload.data.info,
       };
     }
@@ -51,6 +52,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        isError: false,
         dataPopular: action.payload.data.info,
       };
     }
@@ -72,6 +74,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        isError: false,
         categoryList: action.payload.data.data,
         successGetCategory: true,
       };
@@ -94,6 +97,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        isError: false,
         allData: action.payload.data.info,
       };
     }
@@ -115,6 +119,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        isError: false,
         dataCatalog: action.payload.data.info,
       };
     }

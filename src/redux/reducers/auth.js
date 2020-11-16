@@ -64,7 +64,7 @@ export default (state = initialState, action) => {
       }
     }
     case 'LOGOUT': {
-      localStorage.removeItem('token')
+      // localStorage.removeItem('token')
       return {
         ...state,
         isLogin: false,

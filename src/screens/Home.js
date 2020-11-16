@@ -28,6 +28,7 @@ import {
 import imageHome from '../assets/Image.png';
 import imageCard from '../assets/imageCard.png';
 import Star from '../assets/Star.png';
+import Activated from '../assets/activated.png';
 
 import homeAction from '../redux/actions/home';
 
@@ -64,6 +65,12 @@ class Home extends Component {
   category = () => {
     this.props.navigation.navigate('Category');
   };
+  allNew = () => {
+    this.props.navigation.navigate('Catalog');
+  };
+  allPopular = () => {
+    this.props.navigation.navigate('Catalog2');
+  };
 
   render() {
     console.log(this.props);
@@ -77,7 +84,7 @@ class Home extends Component {
     } = this.props.home;
     return (
       <ScrollView>
-        {!isLoading && !isError && !(data == undefined) && (
+        {data !== undefined && (
           <ScrollView style={style.parent}>
             <View style={style.imageHomeWrapper}>
               <Image style={style.imageHome} source={imageHome} />
@@ -87,7 +94,9 @@ class Home extends Component {
               <View style={style.child}>
                 <View style={style.wrapper}>
                   <Text style={style.textNew}>New</Text>
-                  <TouchableOpacity style={style.rightTextWrap}>
+                  <TouchableOpacity
+                    style={style.rightTextWrap}
+                    onPress={this.allNew}>
                     <Text style={style.rightText}>View all</Text>
                   </TouchableOpacity>
                 </View>
@@ -97,7 +106,9 @@ class Home extends Component {
                 <ScrollView horizontal style={style.cardViewWrapper}>
                   {data.length !== 0 &&
                     data.map((item) => (
-                      <TouchableOpacity key={item.id.toString().concat(item.name)} onPress={()=>this.pageProduct(item.id)}>
+                      <TouchableOpacity
+                        key={item.id.toString().concat(item.name)}
+                        onPress={() => this.pageProduct(item.id)}>
                         <Card style={style.cardWrapper}>
                           <CardItem cardBody style={{flexDirection: 'column'}}>
                             <Image
@@ -105,15 +116,87 @@ class Home extends Component {
                               style={style.cardImage}
                             />
                             <View style={style.contentCard}>
-                              <View style={style.starWrapper}>
-                                <Image source={Star} style={style.star} />
-                                <Image source={Star} style={style.star} />
-                                <Image source={Star} style={style.star} />
-                                <Image source={Star} style={style.star} />
-                                <Image source={Star} style={style.star} />
+                            <View style={style.starWrapper}>
+                                {item.rating < 0.5 &&
+                                  Array(5).fill(
+                                    <Image source={Star} style={style.star} />,
+                                  )}
+                                {item.rating >= 0.5 &&
+                                  item.rating < 1.5 &&
+                                  Array(1).fill(
+                                    <Image
+                                      source={Activated}
+                                      style={style.star}
+                                    />,
+                                  )}
+                                {item.rating > 0 &&
+                                  item.rating < 1.5 &&
+                                  Array(4).fill(
+                                    <Image source={Star} style={style.star} />,
+                                  )}
+                                {item.rating >= 1.5 &&
+                                  item.rating < 2.5 &&
+                                  Array(2).fill(
+                                    <Image
+                                      source={Activated}
+                                      style={style.star}
+                                    />,
+                                  )}
+                                {item.rating >= 1.5 &&
+                                  item.rating < 2.5 &&
+                                  Array(3).fill(
+                                    <Image source={Star} style={style.star} />,
+                                  )}
+                                {item.rating >= 2.5 &&
+                                  item.rating < 3.5 &&
+                                  Array(3).fill(
+                                    <Image
+                                      source={Activated}
+                                      style={style.star}
+                                    />,
+                                  )}
+                                {item.rating >= 2.5 &&
+                                  item.rating < 3.5 &&
+                                  Array(2).fill(
+                                    <Image source={Star} style={style.star} />,
+                                  )}
+                                {item.rating >= 3.5 &&
+                                  item.rating < 4.5 &&
+                                  Array(4).fill(
+                                    <Image
+                                      source={Activated}
+                                      style={style.star}
+                                    />,
+                                  )}
+                                {item.rating >= 3.5 &&
+                                  item.rating < 4.5 &&
+                                  Array(1).fill(
+                                    <Image source={Star} style={style.star} />,
+                                  )}
+                                {item.rating >= 4.5 &&
+                                  Array(5).fill(
+                                    <Image
+                                      source={Activated}
+                                      style={style.star}
+                                    />,
+                                  )}
+                                {item.rating > 0 ? (
+                                  <Text style={style.shop}>
+                                    {' '}
+                                    ({item.rating})
+                                  </Text>
+                                ) : (
+                                  <Text style={style.shop}> (0)</Text>
+                                )}
                               </View>
                               <Text style={style.shop}>Zalora Cloth</Text>
-                              <Text style={style.nameProduct}>{item.name}</Text>
+                              <View style={{height: 65}}>
+                                <Text style={style.nameProduct}>
+                                  {item.name.length > 60
+                                    ? item.name.slice(0, 61).concat('...')
+                                    : item.name}
+                                </Text>
+                              </View>
                               <Text style={style.priceProduct}>
                                 Rp {item.price}
                               </Text>
@@ -128,7 +211,9 @@ class Home extends Component {
               <View>
                 <View style={style.wrapper}>
                   <Text style={style.textNew}>Popular</Text>
-                  <TouchableOpacity style={style.rightTextWrap}>
+                  <TouchableOpacity
+                    style={style.rightTextWrap}
+                    onPress={this.allPopular}>
                     <Text style={style.rightText}>View all</Text>
                   </TouchableOpacity>
                 </View>
@@ -138,7 +223,9 @@ class Home extends Component {
                 <ScrollView horizontal style={style.cardViewWrapper}>
                   {data.length !== 0 &&
                     dataPopular.map((item) => (
-                      <TouchableOpacity key={item.id.toString().concat(item.name)} onPress={()=>this.pageProduct(item.id)}>
+                      <TouchableOpacity
+                        key={item.id.toString().concat(item.name)}
+                        onPress={() => this.pageProduct(item.id)}>
                         <Card style={style.cardWrapper}>
                           <CardItem cardBody style={{flexDirection: 'column'}}>
                             <Image
@@ -148,14 +235,86 @@ class Home extends Component {
                             />
                             <View style={style.contentCard}>
                               <View style={style.starWrapper}>
-                                <Image source={Star} style={style.star} />
-                                <Image source={Star} style={style.star} />
-                                <Image source={Star} style={style.star} />
-                                <Image source={Star} style={style.star} />
-                                <Image source={Star} style={style.star} />
+                                {item.rating < 0.5 &&
+                                  Array(5).fill(
+                                    <Image source={Star} style={style.star} />,
+                                  )}
+                                {item.rating >= 0.5 &&
+                                  item.rating < 1.5 &&
+                                  Array(1).fill(
+                                    <Image
+                                      source={Activated}
+                                      style={style.star}
+                                    />,
+                                  )}
+                                {item.rating > 0 &&
+                                  item.rating < 1.5 &&
+                                  Array(4).fill(
+                                    <Image source={Star} style={style.star} />,
+                                  )}
+                                {item.rating >= 1.5 &&
+                                  item.rating < 2.5 &&
+                                  Array(2).fill(
+                                    <Image
+                                      source={Activated}
+                                      style={style.star}
+                                    />,
+                                  )}
+                                {item.rating >= 1.5 &&
+                                  item.rating < 2.5 &&
+                                  Array(3).fill(
+                                    <Image source={Star} style={style.star} />,
+                                  )}
+                                {item.rating >= 2.5 &&
+                                  item.rating < 3.5 &&
+                                  Array(3).fill(
+                                    <Image
+                                      source={Activated}
+                                      style={style.star}
+                                    />,
+                                  )}
+                                {item.rating >= 2.5 &&
+                                  item.rating < 3.5 &&
+                                  Array(2).fill(
+                                    <Image source={Star} style={style.star} />,
+                                  )}
+                                {item.rating >= 3.5 &&
+                                  item.rating < 4.5 &&
+                                  Array(4).fill(
+                                    <Image
+                                      source={Activated}
+                                      style={style.star}
+                                    />,
+                                  )}
+                                {item.rating >= 3.5 &&
+                                  item.rating < 4.5 &&
+                                  Array(1).fill(
+                                    <Image source={Star} style={style.star} />,
+                                  )}
+                                {item.rating >= 4.5 &&
+                                  Array(5).fill(
+                                    <Image
+                                      source={Activated}
+                                      style={style.star}
+                                    />,
+                                  )}
+                                {item.rating > 0 ? (
+                                  <Text style={style.shop}>
+                                    {' '}
+                                    ({item.rating})
+                                  </Text>
+                                ) : (
+                                  <Text style={style.shop}> (0)</Text>
+                                )}
                               </View>
                               <Text style={style.shop}>Zalora Cloth</Text>
-                              <Text style={style.nameProduct}>{item.name}</Text>
+                              <View style={{height: 65}}>
+                                <Text style={style.nameProduct}>
+                                  {item.name.length > 60
+                                    ? item.name.slice(0, 61).concat('...')
+                                    : item.name}
+                                </Text>
+                              </View>
                               <Text style={style.priceProduct}>
                                 Rp {item.price}
                               </Text>
@@ -190,6 +349,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home);
 const style = StyleSheet.create({
   parent: {
     backgroundColor: 'white',
+    flex: 1,
   },
   child: {
     padding: '2%',
@@ -268,6 +428,7 @@ const style = StyleSheet.create({
   star: {
     width: 12,
     height: 12,
+    marginHorizontal: 2,
   },
   shop: {
     color: 'grey',

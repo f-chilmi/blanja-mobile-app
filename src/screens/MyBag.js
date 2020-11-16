@@ -101,7 +101,7 @@ class MyBag extends Component {
             <Text style={style.title}>My Bag</Text>
             {data.length !== 0 &&
               data.map((item, index) => (
-                <Card style={style.card}>
+                <Card style={style.card} key={item.id.toString().concat(item.category)}>
                   <CardItem cardBody>
                     <Body style={style.body}>
                       <View style={style.imageWrap}>
@@ -113,7 +113,13 @@ class MyBag extends Component {
                       <View style={style.textRight}>
                         <View style={style.nameWrap}>
                           <View style={{width: '90%'}}>
-                            <Text style={style.nameProduct}>{item.name}</Text>
+                            <View style={{height: 48}}>
+                              <Text style={style.nameProduct}>
+                                {item.name.length > 50
+                                  ? item.name.slice(0, 51).concat('...')
+                                  : item.name}
+                              </Text>
+                            </View>
                             <Text style={style.shop}>Zalora Cloth</Text>
                           </View>
                           <TouchableOpacity
@@ -182,11 +188,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(MyBag);
 const style = StyleSheet.create({
   parent: {
     backgroundColor: 'white',
+    padding: '3%',
   },
   title: {
-    marginLeft: '2%',
-    fontSize: 20,
+    marginTop: 25,
+    fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 15,
   },
   card: {
     height: 100,
@@ -210,7 +218,7 @@ const style = StyleSheet.create({
     width: '60%',
   },
   nameProduct: {
-    fontSize: 12,
+    fontSize: 10,
   },
   shop: {
     fontSize: 7,

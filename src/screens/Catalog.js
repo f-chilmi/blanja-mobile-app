@@ -29,7 +29,8 @@ import homeAction from '../redux/actions/home';
 
 const API_URL = 'http://127.0.0.1:8080';
 
-import Star from '../assets/activated.png';
+import Star from '../assets/Star.png';
+import Activated from '../assets/activated.png';
 
 const Catalog = ({navigation}) => {
   // const history = useHistory()
@@ -59,14 +60,48 @@ const Catalog = ({navigation}) => {
           />
           <View style={style.contentCard}>
             <View style={style.starWrapper}>
-              <Image source={Star} style={style.star} />
-              <Image source={Star} style={style.star} />
-              <Image source={Star} style={style.star} />
-              <Image source={Star} style={style.star} />
-              <Image source={Star} style={style.star} />
+              {item.rating < 0.5 &&
+                Array(5).fill(<Image source={Star} style={style.star} />)}
+              {item.rating >= 0.5 &&
+                item.rating < 1.5 &&
+                Array(1).fill(<Image source={Activated} style={style.star} />)}
+              {item.rating > 0 &&
+                item.rating < 1.5 &&
+                Array(4).fill(<Image source={Star} style={style.star} />)}
+              {item.rating >= 1.5 &&
+                item.rating < 2.5 &&
+                Array(2).fill(<Image source={Activated} style={style.star} />)}
+              {item.rating >= 1.5 &&
+                item.rating < 2.5 &&
+                Array(3).fill(<Image source={Star} style={style.star} />)}
+              {item.rating >= 2.5 &&
+                item.rating < 3.5 &&
+                Array(3).fill(<Image source={Activated} style={style.star} />)}
+              {item.rating >= 2.5 &&
+                item.rating < 3.5 &&
+                Array(2).fill(<Image source={Star} style={style.star} />)}
+              {item.rating >= 3.5 &&
+                item.rating < 4.5 &&
+                Array(4).fill(<Image source={Activated} style={style.star} />)}
+              {item.rating >= 3.5 &&
+                item.rating < 4.5 &&
+                Array(1).fill(<Image source={Star} style={style.star} />)}
+              {item.rating >= 4.5 &&
+                Array(5).fill(<Image source={Activated} style={style.star} />)}
+              {item.rating > 0 ? (
+                <Text style={style.shop}> ({item.rating})</Text>
+              ) : (
+                <Text style={style.shop}> (0)</Text>
+              )}
             </View>
             <Text style={style.shop}>Zalora Cloth</Text>
-            <Text style={style.nameProduct}>{item.name}</Text>
+            <View style={{height: 65}}>
+              <Text style={style.nameProduct}>
+                {item.name.length > 60
+                  ? item.name.slice(0, 61).concat('...')
+                  : item.name}
+              </Text>
+            </View>
             <Text style={style.priceProduct}>Rp {item.price}</Text>
           </View>
         </CardItem>

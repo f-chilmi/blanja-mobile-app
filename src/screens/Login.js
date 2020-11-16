@@ -22,20 +22,21 @@ class Login extends Component {
   doLogin = () => {
     const {email, password} = this.state;
     const data = {email, password};
-    store.dispatch(auth.login(data));
+    this.props.login(data);
+    // store.dispatch(auth.login(data));
   };
 
-  showAlert = () => {
-    const {alertMsg} = this.props.auth;
-    if (alertMsg !== this.state.alertMsg) {
-      this.setState({alertMsg});
-      Alert.alert(alertMsg);
-    }
-  }
+  // showAlert = () => {
+  //   const {alertMsg} = this.props.auth;
+  //   if (alertMsg !== this.state.alertMsg) {
+  //     this.setState({alertMsg});
+  //     Alert.alert(alertMsg);
+  //   }
+  // }
 
-  componentDidUpdate() {
-    this.showAlert()
-  }
+  // componentDidUpdate() {
+  //   this.showAlert()
+  // }
 
   render() {
     // console.log(this.props)

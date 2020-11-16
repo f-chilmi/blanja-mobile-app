@@ -14,6 +14,7 @@ import ImagePicker from 'react-native-image-picker';
 import {API_URL} from '@env';
 
 import profileAction from '../redux/actions/profile';
+import authAction from '../redux/actions/auth';
 
 // const API_URL = 'http://127.0.0.1:8080';
 
@@ -35,6 +36,9 @@ class Profile extends Component {
   goToSetting = () => {
     this.props.navigation.navigate('Setting');
   };
+  logout = () => {
+    this.props.logout();
+  }
   handleChoosePhoto = () => {
     const options = {};
     ImagePicker.showImagePicker(options, (response) => {
@@ -109,6 +113,14 @@ class Profile extends Component {
               <Icon style={style.icon} name="angle-right" size={30} />
             </View>
           </TouchableOpacity>
+          <TouchableOpacity onPress={this.logout}>
+            <View style={style.textLeft}>
+              <View style={style.textLeft1}>
+                <Text style={style.textOrder}>Logout</Text>
+              </View>
+              <Icon style={style.icon} name="angle-right" size={30} />
+            </View>
+          </TouchableOpacity>
         </View>
         <Modal transparent visible={modalOpen}>
           <View style={style.modalView1}>
@@ -157,6 +169,7 @@ const mapDispatchToProps = {
   getProfile: profileAction.getProfile,
   updateProfile: profileAction.updateProfile,
   updateImage: profileAction.updateImage,
+  logout: authAction.logout,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

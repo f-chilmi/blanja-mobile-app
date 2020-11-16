@@ -31,4 +31,10 @@ export default {
       ),
     };
   },
+  sortPopular: () => {
+    return {
+      type: 'GET_CATALOG',
+      payload: http().get('/public?limit=12&sort[rating]=desc'),
+    };
+  },
 };
