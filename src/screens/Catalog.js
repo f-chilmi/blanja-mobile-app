@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import Icon from 'react-native-vector-icons/FontAwesome';
 // import { useHistory } from 'react-router-dom'
 import {
   View,
@@ -13,13 +14,12 @@ import {
 } from 'react-native';
 import {
   Header,
-  Content,
+  Root,
   Card,
   CardItem,
   ActionSheet,
   Button,
   Item,
-  Icon,
   Left,
   Body,
   Right,
@@ -37,13 +37,17 @@ const Catalog = ({route, navigation}) => {
   const dispatch = useDispatch();
   const home = useSelector((state) => state.home);
   const data = home.dataCatalog;
-  const {id} = route.params;
+  // const {id} = route.params;
   useEffect(() => {
-    dispatch(homeAction.categoryDetail(id));
+    dispatch(homeAction.categoryDetail());
   }, [dispatch]);
 
-  const pageProduct = (id) => {
-    navigation.navigate('PageProduct', {id});
+  const pageProduct = (ids) => {
+    navigation.navigate('PageProduct', {ids});
+  };
+
+  const goToSearch = () => {
+    navigation.navigate('Search')
   };
 
   const renderItem = ({item}) => (
@@ -110,6 +114,17 @@ const Catalog = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={style.parent}>
+      <Header >
+        <Left />
+        <Body>
+          <Text>New</Text>
+        </Body>
+        <Right>
+          <TouchableOpacity onPress={goToSearch} >
+            <Icon name="search" size={20} style={{marginRight: 10}} />
+          </TouchableOpacity>
+        </Right>
+      </Header>
       <View style={style.advFunc}>
         <TouchableOpacity>
           <View style={style.advFuncIcon}>
@@ -117,7 +132,7 @@ const Catalog = ({route, navigation}) => {
             <Text style={style.subtitle}>{' '}Filters</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity >
           <View style={style.advFuncIcon}>
             <Icon type="MaterialIcons" name="sort" />
             <Text style={style.subtitle}>{' '}Price: lowest to high</Text>
@@ -136,7 +151,11 @@ const Catalog = ({route, navigation}) => {
   );
 };
 
-export default Catalog;
+// export default Catalog;
+export default () =>
+  <Root>
+    <Catalog />
+  </Root>;
 
 const style = StyleSheet.create({
   parent: {
@@ -147,6 +166,9 @@ const style = StyleSheet.create({
     height: 310,
     width: '50%',
     backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: '1%',
   },
   cardWrapper: {
     width: '100%',

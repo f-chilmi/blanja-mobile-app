@@ -30,7 +30,8 @@ export default (state=initialState, action)=>{
         isLoading: false,
         isLogin: true,
         data: action.payload.data,
-        successAdd: false
+        successAdd: false,
+        alertMsg: 'Success get data'
       }
     }
     case 'POST_CART_PENDING' : {
@@ -79,6 +80,27 @@ export default (state=initialState, action)=>{
         alertMsg: 'Success update cart',
         alertOpen: true,
         successAdd: true
+      }
+    }
+    case 'DELETE_CART_PENDING' : {
+      return {
+        ...state,
+        isLoading: true
+      }
+    }
+    case 'DELETE_CART_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        alertMsg: 'There is an error at request data'
+      }
+    }
+    case 'DELETE_CART_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        alertMsg: 'Success delete item from cart',
       }
     }
     default : {

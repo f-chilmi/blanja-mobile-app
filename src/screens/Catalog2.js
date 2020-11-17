@@ -131,6 +131,9 @@ const style = StyleSheet.create({
     height: 310,
     width: '50%',
     backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: '1%',
   },
   cardWrapper: {
     width: '100%',

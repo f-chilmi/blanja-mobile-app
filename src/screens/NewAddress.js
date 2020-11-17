@@ -9,22 +9,11 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import {
-  Button,
-  CheckBox,
-  Card,
-  CardItem,
-  Row,
-  Form,
-  Item,
-  Picker,
-  Icon,
-  Left,
-  Body,
-  Right,
-} from 'native-base';
+import { Button } from 'native-base';
+import {connect} from 'react-redux';
+import addressAction from '../redux/actions/address';
 
-export default class NewAddress extends Component {
+class NewAddress extends Component {
   state = {
     nameAddress: '',
     recipientsName: '',
@@ -33,6 +22,13 @@ export default class NewAddress extends Component {
     postalCode: '',
     city: '',
   };
+
+  addAddress = () => {
+    const { nameAddress, recipientsName, recipientsPhone, address, postalCode, city } = this.state
+    const data = { nameAddress, recipientsName, recipientsPhone, address, postalCode, city }
+    this.props.addAddress(this.props.auth.token, data)
+  }
+
   render() {
     return (
       <SafeAreaView>
@@ -53,7 +49,7 @@ export default class NewAddress extends Component {
               />
             </View>
             <View style={style.inputWrapper}>
-              <Text style={style.labelText}>Recipient's name</Text>
+              <Text style={style.labelText}>Recipient's phone</Text>
               <TextInput
                 name="recipientsPhone"
                 onChangeText={(text) => this.setState({recipientsPhone: text})}
@@ -84,7 +80,7 @@ export default class NewAddress extends Component {
               <Button
                 block
                 style={style.buttonCheckOut}
-                onPress={this.goToshipping}>
+                onPress={this.addAddress}>
                 <Text style={style.textCheckOut}>SAVE ADDRESS</Text>
               </Button>
             </View>
@@ -94,6 +90,17 @@ export default class NewAddress extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => ({
+  address: state.address,
+  auth: state.auth,
+});
+const mapDispatchToProps = {
+  getAddress: addressAction.getAddress,
+  addAddress: addressAction.addAddress,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewAddress);
 
 const style = StyleSheet.create({
   parentContent: {

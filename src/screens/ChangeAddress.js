@@ -24,7 +24,6 @@ import {
   Right,
 } from 'native-base';
 import {connect} from 'react-redux';
-import store from '../redux/store';
 import addressAction from '../redux/actions/address';
 
 class ChangeAddress extends Component {

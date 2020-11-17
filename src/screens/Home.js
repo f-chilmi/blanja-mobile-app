@@ -215,7 +215,7 @@ class Home extends Component {
                   <TouchableOpacity
                     style={style.rightTextWrap}
                     onPress={this.allPopular}>
-                    <Text style={style.rightText}>View all</Text>
+                    <Text style={style.rightText1}>View all</Text>
                   </TouchableOpacity>
                 </View>
                 <Text style={style.textUnderNew}>
@@ -225,7 +225,7 @@ class Home extends Component {
                   {data.length !== 0 &&
                     dataPopular.map((item) => (
                       <TouchableOpacity
-                        key={item.id.toString().concat(item.name)}
+                        key={item.id.toString().concat(item.name).concat('popular')}
                         onPress={() => this.pageProduct(item.id)}>
                         <Card style={style.cardWrapper}>
                           <CardItem cardBody style={{flexDirection: 'column'}}>
@@ -389,6 +389,12 @@ const style = StyleSheet.create({
   },
   rightText: {
     marginTop: 20,
+    color: 'grey',
+    fontSize: 13,
+  },
+  rightText1: {
+    marginTop: 20,
+    marginRight: '2%',
     color: 'grey',
     fontSize: 13,
   },

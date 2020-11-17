@@ -7,8 +7,10 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  Modal,
+  Alert,
 } from 'react-native';
-import {Card, CardItem, Body, Button, Spinner, Fab} from 'native-base';
+import {Card, CardItem, Body, Button, Spinner} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 
@@ -20,15 +22,17 @@ class MyBag extends Component {
   state = {
     data: [],
     totalPrice: '',
-    fab: false,
+    modalDelete: false,
+    id: '',
+    successDelete: false,
   };
   componentDidMount() {
     this.props.getCart(this.props.auth.token);
   }
 
   componentDidUpdate() {
+    const {data} = this.props.cart;
     if (this.props.cart.data !== undefined) {
-      const {data} = this.props.cart;
       if (!this.state.data.length) {
         if (Object.keys(this.props.cart.data).length > 0) {
           // console.log(data);
@@ -39,8 +43,8 @@ class MyBag extends Component {
         } else {
           console.log('menunggu data dari cart');
         }
-      } else {
-        console.log('updated');
+      } else if(this.props.cart.data.data.length == this.state.data) {
+        console.log("data length sama")
       }
     } else {
       console.log('belum siap');
@@ -87,11 +91,38 @@ class MyBag extends Component {
     this.props.updateCart(this.props.auth.token, updateQty);
   };
 
+  idModal = (id) => {
+    // console.log(id)
+    this.setState({modalDelete: !this.state.modalDelete, id: id});
+  };
+
+  deleteCart = () => {
+    console.log(this.state.id);
+    this.props.deleteCart(this.props.auth.token, this.state.id);
+    this.setState({modalDelete: false, successDelete: true}, ()=>{
+      this.props.getCart(this.props.auth.token);
+    });
+    // this.refreshCart();
+  };
+
+  refreshCart = () => {
+    this.props.getCart(this.props.auth.token);
+    // if (this.state.data.length === this.props.cart.data.data.length) {
+    //   console.log('sudah sama');
+    // } else {
+    //   this.setState({
+    //     data: this.props.cart.data.data,
+    //     totalPrice: this.props.cart.data['total price'],
+    //   });
+    // }
+  };
+
   checkout = () => {
     this.props.navigation.navigate('Checkout');
   };
 
   render() {
+    console.log(this.props);
     const {data} = this.state;
     return (
       <SafeAreaView style={style.parent}>
@@ -125,21 +156,27 @@ class MyBag extends Component {
                             <Text style={style.shop}>Zalora Cloth</Text>
                           </View>
                           <TouchableOpacity
-                            style={{marginLeft: 'auto', marginTop: 10}}>
-                            <Icon name="ellipsis-v" size={15} />
+                            onPress={() => this.idModal(item.id)}
+                            style={style.iconWrap}>
+                            <View style={style.qty2}>
+                              <Icon name="ellipsis-v" size={15} />
+                            </View>
+                            <Modal
+                              transparent
+                              visible={this.state.modalDelete}
+                              style={{position: 'absolute'}}>
+                              <View style={style.modalWrap}>
+                                <TouchableOpacity
+                                  style={style.insideModal}
+                                  // onPress={() => this.pageProduct(item.id)}
+                                  onPress={() => this.deleteCart()}>
+                                  <Text style={{fontSize: 10}}>
+                                    Delete from the list
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
+                            </Modal>
                           </TouchableOpacity>
-                          {/* <Fab
-                            active={this.state.fab}
-                            direction="left"
-                            // containerStyle={{ }}
-                            style={{marginTop: 10}}
-                            position="topRight"
-                            onPress={() => this.setState({ fab: !this.state.fab })}>
-                            <Icon name="ellipsis-v" size={15} />
-                            <Button>
-                              <Icon name="share"/>
-                            </Button>
-                          </Fab> */}
                         </View>
                         <View style={style.qtyNPrice}>
                           <View style={style.qty}>
@@ -196,6 +233,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   getCart: cartAction.getCart,
   updateCart: cartAction.updateCart,
+  deleteCart: cartAction.deleteCart,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyBag);
@@ -266,6 +304,11 @@ const style = StyleSheet.create({
     marginRight: 20,
     width: '60%',
   },
+  qty2: {
+    flexDirection: 'row',
+    // marginRight: 20,
+    width: '60%',
+  },
   qtyNPrice: {
     marginTop: 15,
     flexDirection: 'row',
@@ -283,7 +326,7 @@ const style = StyleSheet.create({
   },
   textPrice: {
     marginLeft: 'auto',
-    fontSize: 12
+    fontSize: 12,
   },
   buttonBlock: {
     width: '100%',
@@ -300,5 +343,25 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'space-between',
     width: '100%',
+  },
+  iconWrap: {
+    marginLeft: 'auto',
+    marginTop: 10,
+    position: 'relative',
+  },
+  modalWrap: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  insideModal: {
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: 'black',
+    backgroundColor: 'white',
+    height: 40,
+    width: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

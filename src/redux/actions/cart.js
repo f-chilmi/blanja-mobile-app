@@ -20,4 +20,8 @@ export default {
       payload: http(token).patch('/cart', qs.stringify(qty)),
     };
   },
+  deleteCart: (token, id) => ({
+    type: 'DELETE_CART',
+    payload: http(token).delete(`/cart/${id}`)
+  })
 };

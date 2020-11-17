@@ -37,4 +37,8 @@ export default {
       payload: http().get('/public?limit=12&sort[rating]=desc'),
     };
   },
+  searchItem: (search = '') => ({
+    type: 'GET_SEARCH',
+    payload: http().get(`/public?search[name]=${search}`)
+  })
 };

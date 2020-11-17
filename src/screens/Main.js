@@ -44,20 +44,21 @@ const HomeStack = () => {
         component={PageProduct}
       />
       <Stack.Screen
-        options={{
-          title: 'Catalog',
-          headerRight: () => (
-            <TouchableOpacity>
-              <Icon name="search" size={20} style={{marginRight: 10}} />
-            </TouchableOpacity>
-          ),
-        }}
+        // options={{
+        //   title: 'New',
+        //   headerRight: () => (
+        //     <TouchableOpacity >
+        //       <Icon name="search" size={20} style={{marginRight: 10}} />
+        //     </TouchableOpacity>
+        //   ),
+        // }}
+        options={{headerShown: false}}
         name="Catalog"
         component={Catalog}
       />
       <Stack.Screen
         options={{
-          title: 'Catalog',
+          title: 'Popular',
           headerRight: () => (
             <TouchableOpacity>
               <Icon name="search" size={20} style={{marginRight: 10}} />
@@ -66,6 +67,11 @@ const HomeStack = () => {
         }}
         name="Catalog2"
         component={Catalog2}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Search"
+        component={Search}
       />
     </Stack.Navigator>
   );
@@ -83,6 +89,11 @@ const ProfileStack = () => {
         options={{title: 'Shipping address'}}
         name="Shipping"
         component={Shipping}
+      />
+      <Stack.Screen
+        options={{title: 'Adding shipping address'}}
+        name="NewAddress"
+        component={NewAddress}
       />
       <Stack.Screen
         options={{title: 'Change address'}}
@@ -129,6 +140,11 @@ const CategoryStack = () => {
         }}
         name="Catalog"
         component={Catalog}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Search"
+        component={Search}
       />
     </Stack.Navigator>
   );
@@ -177,7 +193,7 @@ class Main extends Component {
   state = {};
 
   render() {
-    console.log(this.props.auth);
+    console.log(this.props);
     return (
       <NavigationContainer>
         {/* <Stack.Navigator>

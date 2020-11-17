@@ -1,5 +1,6 @@
 const initialState = {
   data: {},
+  dataAddress: {},
   isLogin: false,
   isLoading: false,
   isError: false,
@@ -48,8 +49,8 @@ export default (state=initialState, action)=>{
       return {
         ...state,
         isLoading: false,
-        isLogin: true
-        // data: action.payload.data.data
+        isLogin: true,
+        dataAddress: action.payload.data
       }
     }
     default : {

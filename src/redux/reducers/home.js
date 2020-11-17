@@ -35,6 +35,28 @@ export default (state = initialState, action) => {
         dataAll: action.payload.data.info,
       };
     }
+    case 'GET_SEARCH_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case 'GET_SEARCH_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        alertMsg: 'There is an error at request data',
+      };
+    }
+    case 'GET_SEARCH_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        dataSearch: action.payload.data.info,
+      };
+    }
     case 'POPULAR_PENDING': {
       return {
         ...state,
