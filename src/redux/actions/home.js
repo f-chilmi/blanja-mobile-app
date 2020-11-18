@@ -27,10 +27,13 @@ export default {
     return {
       type: 'GET_CATALOG',
       payload: http().get(
-        `public/category?sort[updated_at]=desc&search[category_id]=${id}`,
-      ),
+        `public/category?sort[updated_at]=desc&search[category_id]=${id}`),
     };
   },
+  nextAndPrevLinkCatalog: (url) => ({
+    type: 'GET_CATALOG',
+    payload: http().get(`${url}`),
+  }),
   sortPopular: () => {
     return {
       type: 'GET_CATALOG',

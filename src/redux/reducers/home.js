@@ -9,6 +9,8 @@ const initialState = {
   isLoading: false,
   isError: false,
   alertMsg: '',
+  info: [],
+  dataNext: [],
 };
 
 export default (state = initialState, action) => {
@@ -144,6 +146,31 @@ export default (state = initialState, action) => {
         isLoading: false,
         isError: false,
         dataCatalog: action.payload.data.info,
+        // dataNext: [...initialState.dataCatalog[0], action.payload.data.info],
+        info: action.payload.data.pageInfo,
+      };
+    }
+    case 'GET_CATALOG_NEXT_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case 'GET_CATALOG_NEXT_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        alertMsg: 'There is an error at request data',
+      };
+    }
+    case 'GET_CATALOG_NEXT_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: false,
+        dataCatalog1: action.payload.data.info,
+        info1: action.payload.data.pageInfo,
       };
     }
     default: {

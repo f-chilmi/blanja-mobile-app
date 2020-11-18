@@ -39,9 +39,14 @@ const Catalog = ({navigation}) => {
   const data = home.dataCatalog;
 
   useEffect(() => {
-    // const {id} = this.props.route.params;
     dispatch(homeAction.sortPopular());
   }, [dispatch]);
+  
+  const nextPage = () => {
+    if (home.info.nextLink) {
+      dispatch(homeAction.nextAndPrevLinkCatalog(home.info.nextLink));
+    }
+  };
 
   const pageProduct = (id) => {
     navigation.navigate('PageProduct', {id});
@@ -114,6 +119,8 @@ const Catalog = ({navigation}) => {
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           numColumns={2}
+          onEndReached={nextPage}
+          onEndReachedThreshold={0.5}
         />
       </View>
     </SafeAreaView>

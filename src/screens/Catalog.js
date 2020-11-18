@@ -33,23 +33,29 @@ import Star from '../assets/Star.png';
 import Activated from '../assets/activated.png';
 
 const Catalog = ({route, navigation}) => {
-  // const history = useHistory()
   const dispatch = useDispatch();
   const home = useSelector((state) => state.home);
   const data = home.dataCatalog;
-  // const {id} = route.params;
+
   useEffect(() => {
     dispatch(homeAction.categoryDetail());
   }, [dispatch]);
 
-  const pageProduct = (ids) => {
-    navigation.navigate('PageProduct', {ids});
+  const nextPage = () => {
+    if (home.info.nextLink) {
+      dispatch(homeAction.nextAndPrevLinkCatalog(home.info.nextLink));
+    }
+  };
+
+  const pageProduct = (id) => {
+    navigation.navigate('PageProduct', {id});
   };
 
   const goToSearch = () => {
-    navigation.navigate('Search')
+    navigation.navigate('Search');
   };
 
+  console.log(navigation)
   const renderItem = ({item}) => (
     <TouchableOpacity
       style={style.col}
@@ -114,13 +120,13 @@ const Catalog = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={style.parent}>
-      <Header >
+      <Header>
         <Left />
         <Body>
           <Text>New</Text>
         </Body>
         <Right>
-          <TouchableOpacity onPress={goToSearch} >
+          <TouchableOpacity onPress={goToSearch}>
             <Icon name="search" size={20} style={{marginRight: 10}} />
           </TouchableOpacity>
         </Right>
@@ -129,13 +135,13 @@ const Catalog = ({route, navigation}) => {
         <TouchableOpacity>
           <View style={style.advFuncIcon}>
             <Icon type="MaterialIcons" name="sort" />
-            <Text style={style.subtitle}>{' '}Filters</Text>
+            <Text style={style.subtitle}> Filters</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity >
+        <TouchableOpacity>
           <View style={style.advFuncIcon}>
             <Icon type="MaterialIcons" name="sort" />
-            <Text style={style.subtitle}>{' '}Price: lowest to high</Text>
+            <Text style={style.subtitle}> Price: lowest to high</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -145,17 +151,20 @@ const Catalog = ({route, navigation}) => {
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           numColumns={2}
+          onEndReached={nextPage}
+          onEndReachedThreshold={0.5}
         />
       </View>
     </SafeAreaView>
   );
 };
 
-// export default Catalog;
-export default () =>
-  <Root>
-    <Catalog />
-  </Root>;
+export default Catalog;
+// export default () => (
+//   <Root>
+//     <Catalog />
+//   </Root>
+// );
 
 const style = StyleSheet.create({
   parent: {

@@ -45,6 +45,10 @@ class Checkout extends Component {
     this.props.navigation.navigate('Shipping');
   };
 
+  goToOrder = () => {
+    this.props.navigation.navigate('Order')
+  }
+
   render() {
     console.log(this.props);
     console.log(this.props.checkout.data.data == undefined);
@@ -120,7 +124,7 @@ class Checkout extends Component {
                     Rp{this.props.checkout.data.total}
                   </Text>
                 </View>
-                <Button block style={style.buttonCheckOut}>
+                <Button block style={style.buttonCheckOut} onPress={this.goToOrder}>
                   <Text style={style.textCheckOut}>SUBMIT ORDER</Text>
                 </Button>
               </CardItem>

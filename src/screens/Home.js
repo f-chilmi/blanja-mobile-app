@@ -35,22 +35,6 @@ import homeAction from '../redux/actions/home';
 const API_URL = 'http://127.0.0.1:8080';
 
 class Home extends Component {
-  state = {
-    data: [
-      {
-        nameProduct: 'Blouse Wanita',
-        priceProduct: 150000,
-        shopName: 'Zalora',
-        image: {imageCard},
-      },
-      {
-        nameProduct: 'T-Shirt Boy',
-        priceProduct: 160000,
-        shopName: 'Mango',
-        image: {imageCard},
-      },
-    ],
-  };
 
   componentDidMount() {
     SplashScreen.hide();

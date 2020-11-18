@@ -22,6 +22,7 @@ import ChangeAddress from './ChangeAddress';
 import Profile from './Profile';
 import Setting from './Setting';
 import Search from './Search';
+import Order from './Order'
 
 import {connect} from 'react-redux';
 
@@ -37,11 +38,6 @@ const HomeStack = () => {
         options={{headerShown: false}}
         name="Home"
         component={Home}
-      />
-      <Stack.Screen
-        options={{title: 'Page product'}}
-        name="PageProduct"
-        component={PageProduct}
       />
       <Stack.Screen
         // options={{
@@ -67,6 +63,11 @@ const HomeStack = () => {
         }}
         name="Catalog2"
         component={Catalog2}
+      />
+      <Stack.Screen
+        options={{title: 'Page product'}}
+        name="PageProduct"
+        component={PageProduct}
       />
       <Stack.Screen
         options={{headerShown: false}}
@@ -105,6 +106,11 @@ const ProfileStack = () => {
         name="Setting"
         component={Setting}
       />
+      {/* <Stack.Screen
+        options={{title: 'Settings'}}
+        name="Order"
+        component={MyOrder}
+      /> */}
     </Stack.Navigator>
   );
 };
@@ -162,6 +168,11 @@ const MyBagStack = () => {
         options={{headerShown: false}}
         name="Checkout"
         component={Checkout}
+      />
+      <Stack.Screen
+        options={{title: 'Settings'}}
+        name="Order"
+        component={Order}
       />
     </Stack.Navigator>
   );
