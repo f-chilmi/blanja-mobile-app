@@ -32,12 +32,33 @@ import store from '../redux/store';
 const API_URL = 'http://127.0.0.1:8080';
 
 class PageProduct extends Component {
+  state = {
+    itemsId: this.props.product.data.id,
+    quantity: 1,
+    successAdd: false,
+  };
   componentDidMount() {
     const {id} = this.props.route.params;
     this.props.getProduct(id);
   }
+  // componentDidUpdate() {
+  //   if (this.props.cart.data.success) {
+  //     this.props.navigation.navigate('MyBag');
+  //   }
+  // }
   myBag = () => {
     this.props.navigation.navigate('MyBag');
+  };
+
+  addToCart = () => {
+    console.log('ok');
+    const {itemsId, quantity} = this.state;
+    const data = {itemsId, quantity};
+    this.props.postCart(this.props.auth.token, data);
+    this.setState({successAdd: true}, ()=>{
+      this.props.getCart(this.props.auth.token);
+      this.props.navigation.navigate('MyBag');
+    });
   };
 
   render() {
@@ -109,7 +130,10 @@ class PageProduct extends Component {
                         <Image source={Activated} style={style.star} />,
                       )}
                     {data['AVG(rating)]'] > 0 ? (
-                      <Text style={style.textRating}> ({data['AVG(rating)]']})</Text>
+                      <Text style={style.textRating}>
+                        {' '}
+                        ({data['AVG(rating)]']})
+                      </Text>
                     ) : (
                       <Text style={style.textRating}> (0)</Text>
                     )}
@@ -117,25 +141,18 @@ class PageProduct extends Component {
                   <Text style={style.descProduct}>{data.description}</Text>
                 </View>
               </View>
-              {/* <TouchableOpacity
-                block
-                activeOpacity={0.7}
-                style={style.addToCart}
-                onPress={this.myBag}>
-                <Text style={{color: 'white', fontWeight: 'bold'}}>
-                  ADD TO CART
-                </Text>
-              </TouchableOpacity> */}
             </View>
           )}
         </ScrollView>
-        <View >
+        <View>
           <TouchableOpacity
             block
             activeOpacity={0.7}
             style={style.addToCart}
-            onPress={this.myBag}>
-            <Text style={{color: 'white', fontWeight: 'bold'}}>ADD TO CART</Text>
+            onPress={()=>this.addToCart()}>
+            <Text style={{color: 'white', fontWeight: 'bold'}}>
+              ADD TO CART
+            </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -160,7 +177,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(PageProduct);
 const style = StyleSheet.create({
   parent: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   imageWrapper: {
     height: 300,
@@ -225,6 +242,6 @@ const style = StyleSheet.create({
     width: '96%',
     marginLeft: '2%',
     marginRight: '2%',
-    marginVertical: 10
+    marginVertical: 10,
   },
 });

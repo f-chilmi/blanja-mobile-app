@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import { useHistory } from 'react-router-dom'
+import {BottomSheet} from 'react-native-btr';
 import {
   View,
   StyleSheet,
@@ -13,7 +13,6 @@ import {
   FlatList,
 } from 'react-native';
 import {
-  Header,
   Root,
   Card,
   CardItem,
@@ -24,6 +23,7 @@ import {
   Body,
   Right,
 } from 'native-base';
+import {Header} from 'react-native-elements';
 
 import homeAction from '../redux/actions/home';
 
@@ -36,7 +36,12 @@ const Catalog = ({route, navigation}) => {
   const dispatch = useDispatch();
   const home = useSelector((state) => state.home);
   const data = home.dataCatalog;
-
+  const [sort, setSort] = useState(false);
+  console.log(sort);
+  const toggle = () => {
+    console.log('clicked');
+    // setSort(!sort);
+  };
   useEffect(() => {
     dispatch(homeAction.categoryDetail());
   }, [dispatch]);
@@ -55,7 +60,7 @@ const Catalog = ({route, navigation}) => {
     navigation.navigate('Search');
   };
 
-  console.log(navigation)
+  console.log(navigation);
   const renderItem = ({item}) => (
     <TouchableOpacity
       style={style.col}
@@ -120,17 +125,26 @@ const Catalog = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={style.parent}>
-      <Header>
+      <Header
+        // leftComponent={<MyCustomLeftComponent />}
+        centerComponent={<Text style={style.new}>New</Text>}
+        rightComponent={
+          <TouchableOpacity onPress={goToSearch}>
+            <Icon name="search" size={20} style={{marginRight: 10}} />
+          </TouchableOpacity>
+        }
+      />
+      {/* <Header transparent>
         <Left />
         <Body>
-          <Text>New</Text>
+          <Text style={style.new}>New</Text>
         </Body>
         <Right>
           <TouchableOpacity onPress={goToSearch}>
             <Icon name="search" size={20} style={{marginRight: 10}} />
           </TouchableOpacity>
         </Right>
-      </Header>
+      </Header> */}
       <View style={style.advFunc}>
         <TouchableOpacity>
           <View style={style.advFuncIcon}>
@@ -138,7 +152,7 @@ const Catalog = ({route, navigation}) => {
             <Text style={style.subtitle}> Filters</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={goToSearch}>
           <View style={style.advFuncIcon}>
             <Icon type="MaterialIcons" name="sort" />
             <Text style={style.subtitle}> Price: lowest to high</Text>
@@ -155,6 +169,12 @@ const Catalog = ({route, navigation}) => {
           onEndReachedThreshold={0.5}
         />
       </View>
+      <BottomSheet
+        visible={sort}
+        onBackButtonPress={() => setSort(!sort)}
+        onBackdropPress={() => setSort(!sort)}>
+        <Text>You Component Here</Text>
+      </BottomSheet>
     </SafeAreaView>
   );
 };
@@ -170,6 +190,10 @@ const style = StyleSheet.create({
   parent: {
     backgroundColor: 'white',
     flex: 1,
+  },
+  new: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   col: {
     height: 310,
