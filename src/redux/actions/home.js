@@ -23,11 +23,12 @@ export default {
       payload: http().get('/public?limit=100&sort[rating]=desc'),
     };
   },
-  categoryDetail: (id='') => {
+  categoryDetail: (id = '') => {
     return {
       type: 'GET_CATALOG',
       payload: http().get(
-        `public/category?sort[updated_at]=desc&search[category_id]=${id}`),
+        `public/category?sort[updated_at]=desc&search[category_id]=${id}`,
+      ),
     };
   },
   nextAndPrevLinkCatalog: (url) => ({
@@ -42,6 +43,10 @@ export default {
   },
   searchItem: (search = '') => ({
     type: 'GET_SEARCH',
-    payload: http().get(`/public?search[name]=${search}`)
-  })
+    payload: http().get(`/public?search[name]=${search}`),
+  }),
+  sort: (adv = 'sort[updated_at]=desc') => ({
+    type: 'GET_CATALOG',
+    payload: http().get(`/public?&${adv}`),
+  }),
 };

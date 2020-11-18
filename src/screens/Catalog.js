@@ -16,7 +16,7 @@ import {
   Root,
   Card,
   CardItem,
-  ActionSheet,
+  Icon as IconNav,
   Button,
   Item,
   Left,
@@ -37,13 +37,12 @@ const Catalog = ({route, navigation}) => {
   const home = useSelector((state) => state.home);
   const data = home.dataCatalog;
   const [sort, setSort] = useState(false);
-  console.log(sort);
   const toggle = () => {
     console.log('clicked');
-    // setSort(!sort);
+    setSort(!sort);
   };
   useEffect(() => {
-    dispatch(homeAction.categoryDetail());
+    dispatch(homeAction.sort());
   }, [dispatch]);
 
   const nextPage = () => {
@@ -60,7 +59,23 @@ const Catalog = ({route, navigation}) => {
     navigation.navigate('Search');
   };
 
-  console.log(navigation);
+  const options = [
+    {type: 'Popular', adv: 'sort[rating]=desc'},
+    {type: 'Newest', adv: 'sort[updated_at]=desc'},
+    {type: 'Price: lowest to hight', adv: 'sort[price]=asc'},
+    {type: 'Price: highest to low', adv: 'sort[price]=desc'},
+  ];
+
+  const goToSort = (adv) => {
+    console.log(adv);
+    dispatch(homeAction.sort(adv));
+    setSort(false);
+  };
+  const urlAdv = home.url.slice(9);
+  const index = options.map((item) => item.adv.indexOf(urlAdv));
+  // console.log(index);
+  // console.log(options)
+  // console.log(options)
   const renderItem = ({item}) => (
     <TouchableOpacity
       style={style.col}
@@ -126,36 +141,29 @@ const Catalog = ({route, navigation}) => {
   return (
     <SafeAreaView style={style.parent}>
       <Header
-        // leftComponent={<MyCustomLeftComponent />}
         centerComponent={<Text style={style.new}>New</Text>}
         rightComponent={
           <TouchableOpacity onPress={goToSearch}>
             <Icon name="search" size={20} style={{marginRight: 10}} />
           </TouchableOpacity>
         }
+        containerStyle={{backgroundColor: 'white'}}
       />
-      {/* <Header transparent>
-        <Left />
-        <Body>
-          <Text style={style.new}>New</Text>
-        </Body>
-        <Right>
-          <TouchableOpacity onPress={goToSearch}>
-            <Icon name="search" size={20} style={{marginRight: 10}} />
-          </TouchableOpacity>
-        </Right>
-      </Header> */}
       <View style={style.advFunc}>
         <TouchableOpacity>
           <View style={style.advFuncIcon}>
-            <Icon type="MaterialIcons" name="sort" />
-            <Text style={style.subtitle}> Filters</Text>
+            <IconNav type="MaterialIcons" name="sort" />
+            <Text style={style.subtitle1}> Filters</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={goToSearch}>
+        <TouchableOpacity onPress={toggle}>
           <View style={style.advFuncIcon}>
             <Icon type="MaterialIcons" name="sort" />
-            <Text style={style.subtitle}> Price: lowest to high</Text>
+            {options[0].adv===urlAdv && <Text style={style.subtitle}>Popular</Text>}
+            {options[1].adv===urlAdv && <Text style={style.subtitle}>Newest</Text>}
+            {options[2].adv===urlAdv && <Text style={style.subtitle}>Price: lowest to high</Text>}
+            {options[3].adv===urlAdv && <Text style={style.subtitle}>Price: highest to low</Text>}
+            {/* <Text style={style.subtitle}>options</Text> */}
           </View>
         </TouchableOpacity>
       </View>
@@ -173,18 +181,21 @@ const Catalog = ({route, navigation}) => {
         visible={sort}
         onBackButtonPress={() => setSort(!sort)}
         onBackdropPress={() => setSort(!sort)}>
-        <Text>You Component Here</Text>
+        {/* <Text>Your Component Here</Text> */}
+        <View style={style.bottomSheet}>
+          <Text style={style.sortBy}>Sort by</Text>
+          {options.map((item) => (
+            <View style={style.textWrap}>
+              <Text onPress={() => goToSort(item.adv)}>{item.type}</Text>
+            </View>
+          ))}
+        </View>
       </BottomSheet>
     </SafeAreaView>
   );
 };
 
 export default Catalog;
-// export default () => (
-//   <Root>
-//     <Catalog />
-//   </Root>
-// );
 
 const style = StyleSheet.create({
   parent: {
@@ -193,7 +204,7 @@ const style = StyleSheet.create({
   },
   new: {
     fontSize: 20,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
   },
   col: {
     height: 310,
@@ -246,8 +257,14 @@ const style = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'bold',
   },
+  subtitle1: {
+    fontSize: 12,
+    marginLeft: 10
+  },
   subtitle: {
     fontSize: 12,
+    width: 160,
+    marginLeft: 10
   },
   advFunc: {
     flexDirection: 'row',
@@ -261,5 +278,25 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
+    // width: '70%',
+  },
+  bottomSheet: {
+    flex: 0.5,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: '4%',
+  },
+  sortBy: {
+    fontWeight: 'bold',
+  },
+  textWrap: {
+    height: '20%',
+    // borderWidth: 1,
+    // borderColor: 'black',
+    width: '100%',
+    justifyContent: 'center',
   },
 });

@@ -11,6 +11,7 @@ const initialState = {
   alertMsg: '',
   info: [],
   dataNext: [],
+  url: '',
 };
 
 export default (state = initialState, action) => {
@@ -148,6 +149,7 @@ export default (state = initialState, action) => {
         dataCatalog: action.payload.data.info,
         // dataNext: [...initialState.dataCatalog[0], action.payload.data.info],
         info: action.payload.data.pageInfo,
+        url: action.payload.config.url,
       };
     }
     case 'GET_CATALOG_NEXT_PENDING': {
