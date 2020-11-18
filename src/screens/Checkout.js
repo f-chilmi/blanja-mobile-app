@@ -17,7 +17,6 @@ import {
   Spinner,
   Form,
   Item,
-  Picker,
   Icon,
   Left,
   Body,
@@ -46,7 +45,7 @@ class Checkout extends Component {
   };
 
   goToOrder = () => {
-    this.props.navigation.navigate('Order')
+    this.props.navigation.navigate('Order');
   }
 
   render() {

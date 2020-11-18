@@ -106,11 +106,11 @@ const ProfileStack = () => {
         name="Setting"
         component={Setting}
       />
-      {/* <Stack.Screen
-        options={{title: 'Settings'}}
+      <Stack.Screen
+        options={{headerShown: false}}
         name="Order"
-        component={MyOrder}
-      /> */}
+        component={Order}
+      />
     </Stack.Navigator>
   );
 };
@@ -169,11 +169,11 @@ const MyBagStack = () => {
         name="Checkout"
         component={Checkout}
       />
-      <Stack.Screen
-        options={{title: 'Settings'}}
+      {/* <Stack.Screen
+        options={{headerShown: false}}
         name="Order"
         component={Order}
-      />
+      /> */}
     </Stack.Navigator>
   );
 };

@@ -30,6 +30,10 @@ class Profile extends Component {
     this.props.getProfile(this.props.auth.token);
   }
 
+  goToOrder = () => {
+    this.props.navigation.navigate('Order');
+  }
+
   goToshipping = () => {
     this.props.navigation.navigate('Shipping');
   };
@@ -89,7 +93,7 @@ class Profile extends Component {
         </View>
 
         <View style={style.bottom}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this.goToOrder}>
             <View style={style.textLeft}>
               <View style={style.textLeft1}>
                 <Text style={style.textOrder}>My orders</Text>
