@@ -9,7 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import { Button } from 'native-base';
+import {Button} from 'native-base';
 import {connect} from 'react-redux';
 import addressAction from '../redux/actions/address';
 
@@ -24,10 +24,25 @@ class NewAddress extends Component {
   };
 
   addAddress = () => {
-    const { nameAddress, recipientsName, recipientsPhone, address, postalCode, city } = this.state
-    const data = { nameAddress, recipientsName, recipientsPhone, address, postalCode, city }
-    this.props.addAddress(this.props.auth.token, data)
-  }
+    const {
+      nameAddress,
+      recipientsName,
+      recipientsPhone,
+      address,
+      postalCode,
+      city,
+    } = this.state;
+    const data = {
+      nameAddress,
+      recipientsName,
+      recipientsPhone,
+      address,
+      postalCode,
+      city,
+      isPrimary: true,
+    };
+    this.props.addAddress(this.props.auth.token, data);
+  };
 
   render() {
     return (
@@ -121,7 +136,7 @@ const style = StyleSheet.create({
   btnBlock: {
     width: '100%',
     paddingLeft: '3%',
-    paddingRight: '3%'
+    paddingRight: '3%',
   },
   buttonCheckOut: {
     backgroundColor: '#DB3022',

@@ -50,13 +50,13 @@ class Setting extends Component {
     const {name, birth} = this.state;
     const data = {name, birth};
     console.log(data);
-    store.dispatch(profileAction.updateProfile(this.props.auth.token, data));
+    this.props.updateProfile(this.props.auth.token, data);
     this.setState({modalPersonal: false});
   };
   changePassword = () => {
-    const { oldPassword, newPassword, confirmNewPassword } = this.state
-    const data = { oldPassword, newPassword, confirmNewPassword }
-    store.dispatch(profileAction.changePassword(this.props.auth.token, data));
+    const {oldPassword, newPassword, confirmNewPassword} = this.state;
+    const data = {oldPassword, newPassword, confirmNewPassword};
+    this.props.changePassword(this.props.auth.token, data);
   };
   render() {
     const {data} = this.props.profile;
@@ -97,7 +97,7 @@ class Setting extends Component {
           <Text style={style.labelText}>Password</Text>
           <TextInput
             name="password"
-            value="****"
+            value="********"
             onChangeText={(text) => this.setState({password: text})}
           />
         </View>
@@ -123,15 +123,19 @@ class Setting extends Component {
                     block
                     activeOpacity={0.7}
                     style={style.buttonBlock}
-                    onPress={()=>this.setState({modalPersonal: false})}>
-                    <Text style={{color: 'white', fontWeight: 'bold'}}>CANCEL</Text>
+                    onPress={() => this.setState({modalPersonal: false})}>
+                    <Text style={{color: 'white', fontWeight: 'bold'}}>
+                      CANCEL
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     block
                     activeOpacity={0.7}
                     style={style.buttonBlock}
                     onPress={this.editPersonal}>
-                    <Text style={{color: 'white', fontWeight: 'bold'}}>SAVE</Text>
+                    <Text style={{color: 'white', fontWeight: 'bold'}}>
+                      SAVE
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -180,8 +184,7 @@ class Setting extends Component {
                   <TouchableOpacity
                     activeOpacity={0.7}
                     style={style.buttonBlock}
-                    onPress={this.changePassword}
-                  >
+                    onPress={this.changePassword}>
                     <Text style={{color: 'white', fontWeight: 'bold'}}>
                       SAVE
                     </Text>
@@ -203,6 +206,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
   getProfile: profileAction.getProfile,
+  updateProfile: profileAction.updateProfile,
   changePassword: profileAction.changePassword,
 };
 

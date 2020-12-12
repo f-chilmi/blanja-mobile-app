@@ -6,6 +6,7 @@ import {
   Text,
   SafeAreaView,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import {Button, Card, CardItem, Spinner, Item, Input} from 'native-base';
 import {connect} from 'react-redux';
@@ -25,6 +26,7 @@ class Shipping extends Component {
     city: '',
     postalCode: '',
     isPrimary: '',
+    refreshing: false,
   };
 
   componentDidMount() {
@@ -37,24 +39,40 @@ class Shipping extends Component {
   changeAddress = (id) => {
     this.props.navigation.navigate('ChangeAddress', {id});
   };
+  wait = (timeout) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+  };
+
+  onRefresh = () => {
+    this.setState({refreshing: true});
+    this.props.getAddress(this.props.auth.token);
+    this.wait(2000).then(() => this.setState({refreshing: false}));
+  };
   render() {
     const {data} = this.props.address;
-    // console.log(this.props.address.data);
+    console.log(this.props.address);
     return (
       <View style={style.parent}>
-        <Item searchbar rounded>
+        {/* <Item searchbar rounded>
           <Icon style={{marginLeft: 15}} name="search" size={20} color="grey" />
           <Input style={{marginLeft: 10}} placeholder="Search" />
-        </Item>
+        </Item> */}
         <Text style={style.shippingText}>Shipping address</Text>
-        {data == undefined && <Spinner />}
-        {/* {!(this.props.address.data == undefined) && (
-          <ScrollView>
-            {this.props.address.data.length > 0 && }
-          </ScrollView>
-        )} */}
+        {data == undefined && this.props.address.isLoading && <Spinner />}
+        {data == undefined &&
+          this.props.address.alertMsg === 'No address found' && (
+            <Text>{this.props.address.alertMsg}</Text>
+          )}
         {!(data == undefined) && (
-          <ScrollView>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh}
+              />
+            }>
             {data.length > 0 &&
               data.map((item) => (
                 <Card>
@@ -70,7 +88,9 @@ class Shipping extends Component {
                     </View>
                     <View style={style.address}>
                       <Text style={style.addresstext}>{item.address}</Text>
-                      <Text style={style.addresstext}>+62 {item.recipientsPhone}</Text>
+                      <Text style={style.addresstext}>
+                        +62 {item.recipientsPhone}
+                      </Text>
                     </View>
                   </CardItem>
                 </Card>

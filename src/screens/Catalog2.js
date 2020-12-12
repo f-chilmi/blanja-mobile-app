@@ -28,6 +28,7 @@ import {
 import homeAction from '../redux/actions/home';
 
 const API_URL = 'http://127.0.0.1:8080';
+// import {API_URL} from '@env';
 
 import Star from '../assets/Star.png';
 import Activated from '../assets/activated.png';

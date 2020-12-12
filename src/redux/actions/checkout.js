@@ -10,7 +10,7 @@ export default {
   payment: (token) => {
     return {
       type: 'PAYMENT',
-      payload: http(token).get('/checkout/payments'),
+      payload: http(token).get('/checkout/balance'),
     };
   },
 };

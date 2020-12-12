@@ -4,7 +4,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TouchableOpacity} from 'react-native';
-import SplashScreen from 'react-native-splash-screen';
 
 import Register from './Register';
 import Login from './Login';
@@ -22,11 +21,10 @@ import ChangeAddress from './ChangeAddress';
 import Profile from './Profile';
 import Setting from './Setting';
 import Search from './Search';
-import Order from './Order'
+import Order from './Order';
+import TabNavigator from './TabNavigator';
 
 import {connect} from 'react-redux';
-
-import auth from '../redux/actions/auth';
 
 const Stack = createStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -40,14 +38,6 @@ const HomeStack = () => {
         component={Home}
       />
       <Stack.Screen
-        // options={{
-        //   title: 'New',
-        //   headerRight: () => (
-        //     <TouchableOpacity >
-        //       <Icon name="search" size={20} style={{marginRight: 10}} />
-        //     </TouchableOpacity>
-        //   ),
-        // }}
         options={{headerShown: false}}
         name="Catalog"
         component={Catalog}
@@ -169,11 +159,11 @@ const MyBagStack = () => {
         name="Checkout"
         component={Checkout}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
         options={{headerShown: false}}
         name="Order"
         component={Order}
-      /> */}
+      />
     </Stack.Navigator>
   );
 };
@@ -207,68 +197,85 @@ class Main extends Component {
     console.log(this.props);
     return (
       <NavigationContainer>
-        {/* <Stack.Navigator>
-          <Stack.Screen
-            options={{headerShown: false}}
-            name="Splash"
-            component={Splash}
-          />
-        </Stack.Navigator> */}
         {this.props.auth.isLogin ? (
-          <BottomTabs.Navigator>
-            <BottomTabs.Screen
+          <Stack.Navigator>
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="TabNavigator"
+              component={TabNavigator}
+            />
+            <Stack.Screen
               options={{
-                tabBarIcon: ({size, color, focused}) => (
-                  <Icon name="home" size={25} color={color} />
+                title: 'Popular',
+                headerRight: () => (
+                  <TouchableOpacity>
+                    <Icon name="search" size={20} style={{marginRight: 10}} />
+                  </TouchableOpacity>
                 ),
               }}
-              name="Home"
-              component={HomeStack}
+              name="Catalog2"
+              component={Catalog2}
             />
-            <BottomTabs.Screen
+            <Stack.Screen
+              options={{title: 'Page product'}}
+              name="PageProduct"
+              component={PageProduct}
+            />
+            <Stack.Screen
+              options={{title: 'Shipping address'}}
+              name="Shipping"
+              component={Shipping}
+            />
+            <Stack.Screen
+              options={{title: 'Adding shipping address'}}
+              name="NewAddress"
+              component={NewAddress}
+            />
+            <Stack.Screen
+              options={{title: 'Change address'}}
+              name="ChangeAddress"
+              component={ChangeAddress}
+            />
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Setting"
+              component={Setting}
+            />
+            <Stack.Screen
               options={{
-                tabBarIcon: ({size, color, focused}) => (
-                  <Icon name="shopping-cart" size={25} color={color} />
+                headerRight: () => (
+                  <TouchableOpacity>
+                    <Icon name="search" size={20} style={{marginRight: 10}} />
+                  </TouchableOpacity>
                 ),
+                title: 'Categories',
               }}
               name="Category"
-              component={CategoryStack}
+              component={Category}
             />
-            <BottomTabs.Screen
-              options={{
-                tabBarIcon: ({size, color, focused}) => (
-                  <Icon name="shopping-bag" size={25} color={color} />
-                ),
-              }}
-              name="MyBag"
-              component={MyBagStack}
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Catalog"
+              component={Catalog}
             />
-            {/* <BottomTabs.Screen
-              options={{
-                tabBarIcon: ({size, color, focused}) => (
-                  <Icon name="heart" size={25} color={color} />
-                ),
-              }}
-              name="Shipping"
-              component={Shippingstack}
-            /> */}
-            <BottomTabs.Screen
-              options={{
-                tabBarIcon: ({size, color, focused}) => (
-                  <Icon name="user" size={25} color={color} />
-                ),
-              }}
-              name="Profile"
-              component={ProfileStack}
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Search"
+              component={Search}
             />
-          </BottomTabs.Navigator>
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Checkout"
+              component={Checkout}
+            />
+            <Stack.Screen
+              options={{headerShown: false}}
+              name="Order"
+              component={Order}
+            />
+          </Stack.Navigator>
         ) : (
           <Stack.Navigator>
-            {/* <Stack.Screen
-              options={{headerShown: false}}
-              name="Splash"
-              component={Splash}
-            /> */}
             <Stack.Screen
               options={{headerShown: false}}
               name="Landing"

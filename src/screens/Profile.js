@@ -6,17 +6,16 @@ import {
   TouchableOpacity,
   Text,
   Modal,
-  Button,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
-import {API_URL} from '@env';
+// import {API_URL} from '@env';
 
 import profileAction from '../redux/actions/profile';
 import authAction from '../redux/actions/auth';
 
-// const API_URL = 'http://127.0.0.1:8080';
+const API_URL = 'http://127.0.0.1:8080';
 
 class Profile extends Component {
   constructor(props) {
@@ -32,7 +31,7 @@ class Profile extends Component {
 
   goToOrder = () => {
     this.props.navigation.navigate('Order');
-  }
+  };
 
   goToshipping = () => {
     this.props.navigation.navigate('Shipping');
@@ -42,9 +41,13 @@ class Profile extends Component {
   };
   logout = () => {
     this.props.logout();
-  }
+  };
   handleChoosePhoto = () => {
-    const options = {};
+    const options = {
+      mediaType: 'photo',
+      maxWidth: 1000,
+      maxHeight: 1000,
+    };
     ImagePicker.showImagePicker(options, (response) => {
       console.log(response);
       if (response.uri) {
@@ -56,11 +59,11 @@ class Profile extends Component {
           name: response.fileName,
         });
         this.props.updateImage(this.props.auth.token, form);
+        this.props.getProfile(this.props.auth.token);
       }
     });
   };
   render() {
-    console.log(this.props);
     const {data} = this.props.profile;
     const {image, modalOpen} = this.state;
     return (
@@ -73,12 +76,12 @@ class Profile extends Component {
             }}>
             <View style={style.avaWrapper}>
               {image == '' ? (
-                data.urlPicture == undefined ? (
+                data.picture == undefined ? (
                   <Icon size={80} name="user" />
                 ) : (
                   <Image
                     style={style.img}
-                    source={{uri: `${API_URL}/${data.urlPicture}`}}
+                    source={{uri: `${API_URL}/${data.picture}`}}
                   />
                 )
               ) : (
@@ -129,18 +132,13 @@ class Profile extends Component {
         <Modal transparent visible={modalOpen}>
           <View style={style.modalView1}>
             <View style={style.avaWrapper1}>
-              {image == '' ? (
-                data.urlPicture == undefined ? (
-                  <Icon size={80} name="user" />
-                ) : (
-                  <Image
-                    style={style.ava}
-                    source={{uri: `${API_URL}/${data.urlPicture}`}}
-                  />
-                )
-              ) : (
-                <Image style={style.ava} source={image} />
+              {!(data.picture == undefined) && (
+                <Image
+                  style={style.ava}
+                  source={{uri: `${API_URL}/${data.picture}`}}
+                />
               )}
+              {console.log(`${API_URL}/${data.picture}`)}
             </View>
             <View style={style.buttonWrapper2}>
               <TouchableOpacity
@@ -154,7 +152,9 @@ class Profile extends Component {
                 <Text>Cancel</Text>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={style.choosePhoto1}>
+            <TouchableOpacity
+              onPress={() => this.setState({modalOpen: false})}
+              style={style.choosePhoto1}>
               <Text>Save</Text>
             </TouchableOpacity>
           </View>

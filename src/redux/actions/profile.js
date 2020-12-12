@@ -5,21 +5,21 @@ export default {
   getProfile: (token) => {
     return {
       type: 'GET_PROFILE',
-      payload: http(token).get('/users'),
+      payload: http(token).get('/user'),
     };
   },
   updateProfile: (token, data) => {
     return {
-      type: 'UPDATE_PROFILE',
-      payload: http(token).patch('/users', qs.stringify(data)),
+      type: 'UPDATE_PROFILE_INFO',
+      payload: http(token).patch('/user', qs.stringify(data)),
     };
   },
   updateImage: (token, form) => ({
-    type: 'UPDATE_PROFILE',
-    payload: http(token).patch('/users', form)
+    type: 'UPDATE_PROFILE_IMAGE',
+    payload: http(token).patch('/user/update-picture', form),
   }),
   changePassword: (token, data) => ({
     type: 'CHANGE_PASSWORD',
-    payload: http(token).patch('/users/password', qs.stringify(data))
-  })
+    payload: http(token).patch('/user/password', qs.stringify(data)),
+  }),
 };

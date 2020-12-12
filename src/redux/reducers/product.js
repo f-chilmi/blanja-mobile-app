@@ -3,44 +3,44 @@ const initialState = {
   quantity: 1,
   isLoading: false,
   isError: false,
-  alertMsg: ''
-}
+  alertMsg: '',
+};
 
-export default (state=initialState, action)=>{
-  switch(action.type){
-    case 'GET_PRODUCT_PENDING' : {
+export default (state = initialState, action) => {
+  switch (action.type) {
+    case 'GET_PRODUCT_PENDING': {
       return {
         ...state,
-        isLoading: true
-      }
+        isLoading: true,
+      };
     }
     case 'GET_PRODUCT_REJECTED': {
       return {
         ...state,
         isLoading: false,
         isError: true,
-        alertMsg: 'There is an error at request data'
-      }
+        alertMsg: 'There is an error at request data',
+      };
     }
     case 'GET_PRODUCT_FULFILLED': {
       return {
         ...state,
         isLoading: false,
-        data: action.payload.data.data,
-      }
+        data: action.payload.data.findDetail,
+      };
     }
     case 'INCREASE_COUNTER': {
       return {
-        quantity: state.count+1
-      }
+        quantity: state.count + 1,
+      };
     }
     case 'DECREASE_COUNTER': {
       return {
-        quantity: state.count-1
-      }
+        quantity: state.count - 1,
+      };
     }
-    default : {
-      return state
+    default: {
+      return state;
     }
   }
-}
+};

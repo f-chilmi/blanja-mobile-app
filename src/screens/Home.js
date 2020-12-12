@@ -33,9 +33,9 @@ import Activated from '../assets/activated.png';
 import homeAction from '../redux/actions/home';
 
 const API_URL = 'http://127.0.0.1:8080';
+// import {API_URL} from '@env';
 
 class Home extends Component {
-
   componentDidMount() {
     SplashScreen.hide();
     this.props.getHome();
@@ -49,27 +49,18 @@ class Home extends Component {
   category = () => {
     this.props.navigation.navigate('Category');
   };
-  allNew = () => {
-    this.props.navigation.navigate('Catalog', {id: ' '});
+  allNew = (sort) => {
+    this.props.navigation.navigate('Catalog', {sort});
   };
   allPopular = () => {
     this.props.navigation.navigate('Catalog2');
   };
 
   render() {
-    // console.log(this.props);
-    const {
-      isLoading,
-      dataPopular,
-      // data,
-      isError,
-      alertMsg,
-      categoryList,
-    } = this.props.home;
-    const data = this.props.home.dataAll;
+    const {dataAll, dataPopular, isLoading} = this.props.home;
     return (
       <ScrollView>
-        {data !== undefined && (
+        {dataAll !== undefined && (
           <ScrollView style={style.parent}>
             <View style={style.imageHomeWrapper}>
               <Image style={style.imageHome} source={imageHome} />
@@ -81,7 +72,7 @@ class Home extends Component {
                   <Text style={style.textNew}>New</Text>
                   <TouchableOpacity
                     style={style.rightTextWrap}
-                    onPress={this.allNew}>
+                    onPress={() => this.allNew('sort[updatedAt]=asc')}>
                     <Text style={style.rightText}>View all</Text>
                   </TouchableOpacity>
                 </View>
@@ -89,19 +80,21 @@ class Home extends Component {
                   You've never seen it before!
                 </Text>
                 <ScrollView horizontal style={style.cardViewWrapper}>
-                  {data.length !== 0 &&
-                    data.map((item) => (
+                  {dataAll.length !== 0 &&
+                    dataAll.map((item) => (
                       <TouchableOpacity
                         key={item.id.toString().concat(item.name)}
                         onPress={() => this.pageProduct(item.id)}>
                         <Card style={style.cardWrapper}>
                           <CardItem cardBody style={{flexDirection: 'column'}}>
                             <Image
-                              source={{uri: `${API_URL}${item.picture1}`}}
+                              source={{
+                                uri: `${API_URL}${item.Product_pictures[0].picture}`,
+                              }}
                               style={style.cardImage}
                             />
                             <View style={style.contentCard}>
-                            <View style={style.starWrapper}>
+                              <View style={style.starWrapper}>
                                 {item.rating < 0.5 &&
                                   Array(5).fill(
                                     <Image source={Star} style={style.star} />,
@@ -198,7 +191,7 @@ class Home extends Component {
                   <Text style={style.textNew}>Popular</Text>
                   <TouchableOpacity
                     style={style.rightTextWrap}
-                    onPress={this.allPopular}>
+                    onPress={() => this.allNew('sort[rating]=desc')}>
                     <Text style={style.rightText1}>View all</Text>
                   </TouchableOpacity>
                 </View>
@@ -206,15 +199,20 @@ class Home extends Component {
                   You've never seen it before!
                 </Text>
                 <ScrollView horizontal style={style.cardViewWrapper}>
-                  {data.length !== 0 &&
+                  {dataPopular.length !== 0 &&
                     dataPopular.map((item) => (
                       <TouchableOpacity
-                        key={item.id.toString().concat(item.name).concat('popular')}
+                        key={item.id
+                          .toString()
+                          .concat(item.name)
+                          .concat('popular')}
                         onPress={() => this.pageProduct(item.id)}>
                         <Card style={style.cardWrapper}>
                           <CardItem cardBody style={{flexDirection: 'column'}}>
                             <Image
-                              source={{uri: `${API_URL}${item.picture1}`}}
+                              source={{
+                                uri: `${API_URL}${item.Product_pictures[0].picture}`,
+                              }}
                               // source={{uri: `${API_URL}${item.picture1}`,}}
                               style={style.cardImage}
                             />
@@ -313,7 +311,8 @@ class Home extends Component {
             </View>
           </ScrollView>
         )}
-        {dataPopular == undefined && <Spinner />}
+        {dataPopular === undefined && <Spinner />}
+        {isLoading && <Spinner />}
       </ScrollView>
     );
   }

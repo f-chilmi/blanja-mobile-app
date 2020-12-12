@@ -5,32 +5,31 @@ import {
   Image,
   TouchableOpacity,
   Text,
-  SafeAreaView,
   ScrollView,
 } from 'react-native';
 import {Card, CardItem} from 'native-base';
 import {connect} from 'react-redux';
 
-import imageHome from '../assets/Image.png';
-
 import homeAction from '../redux/actions/home';
 
 const API_URL = 'http://127.0.0.1:8080';
+// import {API_URL} from '@env';
 
 class Category extends Component {
   componentDidMount = () => {
     this.props.getCategory();
   };
   allItem = () => {
-    this.props.navigation.navigate('Catalog2');
+    const sort = 'limit=100&sort[updatedAt]=desc';
+    this.props.navigation.navigate('Catalog', {sort});
   };
   pageProduct = (id) => {
     this.props.navigation.navigate('PageProduct', {id});
   };
-  catalogProduct = (id) => {
-    this.props.navigation.navigate('Catalog', {id})
-    console.log(id)
-  }
+  catalogProduct = (sort) => {
+    this.props.navigation.navigate('Catalog', {sort});
+    console.log(sort);
+  };
   render() {
     const {categoryList} = this.props.home;
     console.log(this.props);
@@ -48,15 +47,20 @@ class Category extends Component {
         <ScrollView>
           {categoryList.length !== 0 &&
             categoryList.map((item) => (
-              <TouchableOpacity key={item.id.toString().concat(item.category)} onPress={()=>this.catalogProduct(item.id)}>
+              <TouchableOpacity
+                key={item.id.toString().concat(item.category)}
+                onPress={() =>
+                  this.catalogProduct(`search[category_id]=${item.id}`)
+                }>
                 <Card style={style.card}>
                   <CardItem style={style.cardItem}>
                     <Text style={style.categoryName}>{item.category}</Text>
                     <View style={style.imageWrapper}>
                       <Image
-                        source={{uri: `${API_URL}${item.image}`}}
+                        source={{uri: `${API_URL}${item.picture}`}}
                         style={style.img}
                       />
+                      {console.log(`${API_URL}${item.picture}`)}
                     </View>
                   </CardItem>
                 </Card>

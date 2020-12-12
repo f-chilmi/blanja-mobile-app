@@ -30,7 +30,7 @@ class Register extends Component {
     if (name && email && password) {
       const data = {name, email, password};
       console.log(data);
-      store.dispatch(auth.signup(data));
+      this.props.signup(data);
     } else {
       console.log('all field must be filled');
     }

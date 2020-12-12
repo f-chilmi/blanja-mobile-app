@@ -32,13 +32,12 @@ class Search extends Component {
   state = {
     search: '',
   };
-  // componentDidUpdate() {
-  //   if (this.state.search.length > 3 && this.state.search.length < 5 && this.state.search !== '') {
-  //     this.props.searchItem(this.state.search);
-  //   }
-  // }
+  pageProduct = (id) => {
+    this.props.navigation.navigate('PageProduct', {id});
+    console.log(id);
+  };
   render() {
-    console.log(this.state);
+    console.log(this.props.home.dataSearch);
     return (
       <View style={{flex: 1, padding: '2%'}}>
         <Item searchbar rounded>
@@ -58,7 +57,7 @@ class Search extends Component {
                 <TouchableOpacity
                   style={style.col}
                   key={item.id.toString().concat(item.name)}
-                  onPress={() => pageProduct(item.id)}>
+                  onPress={() => this.pageProduct(item.id)}>
                   <Card style={style.cardWrapper}>
                     <CardItem cardBody style={{flexDirection: 'column'}}>
                       <Image

@@ -35,7 +35,7 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: false,
-        dataAll: action.payload.data.info,
+        dataAll: action.payload.data.info.findProduct.rows,
       };
     }
     case 'GET_SEARCH_PENDING': {
@@ -57,7 +57,8 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: false,
-        dataSearch: action.payload.data.info,
+        dataSearch: action.payload.data.info.findProduct.rows,
+        alertMsg: '',
       };
     }
     case 'POPULAR_PENDING': {
@@ -79,7 +80,8 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: false,
-        dataPopular: action.payload.data.info,
+        dataPopular: action.payload.data.info.findProduct.rows,
+        alertMsg: '',
       };
     }
     case 'CATEGORY_LIST_PENDING': {
@@ -101,7 +103,7 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: false,
-        categoryList: action.payload.data.data,
+        categoryList: action.payload.data.categories,
         successGetCategory: true,
       };
     }
@@ -142,23 +144,25 @@ export default (state = initialState, action) => {
       };
     }
     case 'GET_CATALOG_FULFILLED': {
+      const {rows} = action.payload.data.info.findProduct;
+      const newData = [...state.dataCatalog, ...rows];
       return {
         ...state,
-        isLoading: false,
         isError: false,
-        dataCatalog: action.payload.data.info,
-        // dataNext: [...initialState.dataCatalog[0], action.payload.data.info],
-        info: action.payload.data.pageInfo,
         url: action.payload.config.url,
+        dataCatalog: newData,
+        info: action.payload.data.info.pageInfo,
+        alertMsg: '',
+        isLoading: false,
       };
     }
-    case 'GET_CATALOG_NEXT_PENDING': {
+    case 'REFRESH_CATALOG_PENDING': {
       return {
         ...state,
         isLoading: true,
       };
     }
-    case 'GET_CATALOG_NEXT_REJECTED': {
+    case 'REFRESH_CATALOG_REJECTED': {
       return {
         ...state,
         isLoading: false,
@@ -166,13 +170,13 @@ export default (state = initialState, action) => {
         alertMsg: 'There is an error at request data',
       };
     }
-    case 'GET_CATALOG_NEXT_FULFILLED': {
+    case 'REFRESH_CATALOG_FULFILLED': {
       return {
         ...state,
         isLoading: false,
         isError: false,
-        dataCatalog1: action.payload.data.info,
-        info1: action.payload.data.pageInfo,
+        dataCatalog: action.payload.data.info.findProduct,
+        info: action.payload.data.info.pageInfo,
       };
     }
     default: {

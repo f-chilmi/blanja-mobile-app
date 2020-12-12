@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {API_URL} from '@env';
 import {
   View,
   StyleSheet,
@@ -62,7 +63,7 @@ class ChangeAddress extends Component {
     }
   }
   render() {
-    console.log(this.props.route);
+    console.log(this.props);
     const {
       nameAddress,
       recipientsName,
@@ -71,7 +72,6 @@ class ChangeAddress extends Component {
       postalCode,
       city,
     } = this.state;
-    // console.log(nameAddress, recipientsName, recipientsPhone, address, postalCode, city)
     console.log(this.state);
     return (
       <SafeAreaView>

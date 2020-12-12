@@ -9,31 +9,20 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import {
-  Container,
-  Fab,
-  Card,
-  CardItem,
-  Spinner,
-  Button,
-  Icon,
-  Left,
-  Body,
-  Right,
-} from 'native-base';
+import {Spinner} from 'native-base';
 
 import Star from '../assets/Star.png';
 import Activated from '../assets/activated.png';
 
 import productAction from '../redux/actions/product';
 import cartAction from '../redux/actions/cart';
-import store from '../redux/store';
 
 const API_URL = 'http://127.0.0.1:8080';
+// import {API_URL} from '@env';
 
 class PageProduct extends Component {
   state = {
-    itemsId: this.props.product.data.id,
+    id_product: this.props.product.data[0].id,
     quantity: 1,
     successAdd: false,
   };
@@ -41,30 +30,33 @@ class PageProduct extends Component {
     const {id} = this.props.route.params;
     this.props.getProduct(id);
   }
-  // componentDidUpdate() {
-  //   if (this.props.cart.data.success) {
-  //     this.props.navigation.navigate('MyBag');
-  //   }
-  // }
+
   myBag = () => {
     this.props.navigation.navigate('MyBag');
   };
 
   addToCart = () => {
     console.log('ok');
-    const {itemsId, quantity} = this.state;
-    const data = {itemsId, quantity};
+    const data = {
+      id_product: this.props.product.data[0].id,
+      quantity: 1,
+    };
     this.props.postCart(this.props.auth.token, data);
-    this.setState({successAdd: true}, ()=>{
+    this.wait(1000).then(() => {
       this.props.getCart(this.props.auth.token);
       this.props.navigation.navigate('MyBag');
     });
   };
 
+  wait = (timeout) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+  };
+
   render() {
-    // console.log(this.props);
-    const {id} = this.props.route.params;
-    const {data} = this.props.product;
+    console.log(this.props.product.data[0].id);
+    const data = this.props.product.data[0];
     return (
       <SafeAreaView style={style.parent}>
         <ScrollView>
@@ -74,7 +66,7 @@ class PageProduct extends Component {
               <View style={{marginHorizontal: '2%', marginBottom: 25}}>
                 <View style={style.imageWrapper}>
                   <Image
-                    source={{uri: `${API_URL}${data.picture1}`}}
+                    source={{uri: `${API_URL}${data.Product_pictures[0].picture}`}}
                     style={style.image}
                   />
                 </View>
@@ -135,7 +127,7 @@ class PageProduct extends Component {
                         ({data['AVG(rating)]']})
                       </Text>
                     ) : (
-                      <Text style={style.textRating}> (0)</Text>
+                      <Text style={style.textRating}> ({data.rating})</Text>
                     )}
                   </View>
                   <Text style={style.descProduct}>{data.description}</Text>
@@ -149,7 +141,7 @@ class PageProduct extends Component {
             block
             activeOpacity={0.7}
             style={style.addToCart}
-            onPress={()=>this.addToCart()}>
+            onPress={() => this.addToCart()}>
             <Text style={{color: 'white', fontWeight: 'bold'}}>
               ADD TO CART
             </Text>

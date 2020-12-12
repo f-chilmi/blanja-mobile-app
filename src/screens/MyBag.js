@@ -8,7 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Modal,
-  Alert,
+  RefreshControl,
 } from 'react-native';
 import {Card, CardItem, Body, Button, Spinner} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -17,6 +17,7 @@ import {connect} from 'react-redux';
 import cartAction from '../redux/actions/cart';
 
 const API_URL = 'http://127.0.0.1:8080';
+// import {API_URL} from '@env';
 
 class MyBag extends Component {
   state = {
@@ -25,6 +26,7 @@ class MyBag extends Component {
     modalDelete: false,
     id: '',
     successDelete: false,
+    refreshing: false,
   };
   componentDidMount() {
     this.props.getCart(this.props.auth.token);
@@ -34,17 +36,18 @@ class MyBag extends Component {
     const {data} = this.props.cart;
     if (this.props.cart.data !== undefined) {
       if (!this.state.data.length) {
-        if (Object.keys(this.props.cart.data).length > 0) {
-          // console.log(data);
+        if (Object.keys(data).length > 0) {
+          console.log(data.result);
+          // eslint-disable-next-line react/no-did-update-set-state
           this.setState({
-            data: data.data,
+            data: data.result,
             totalPrice: data['total price'],
           });
         } else {
           console.log('menunggu data dari cart');
         }
-      } else if(this.props.cart.data.data.length == this.state.data) {
-        console.log("data length sama")
+      } else if (data.result === this.state.data) {
+        console.log('data length sama');
       }
     } else {
       console.log('belum siap');
@@ -57,13 +60,14 @@ class MyBag extends Component {
     data[i] = {
       ...this.state.data[i],
       quantity: this.state.data[i].quantity - 1,
-      total: this.state.data[i].price * (this.state.data[i].quantity - 1),
+      total:
+        this.state.data[i].Product.price * (this.state.data[i].quantity - 1),
     };
-    totalPrice = totalPrice - this.state.data[i].price;
-    const itemsId = data[i].items_id;
+    totalPrice = totalPrice - this.state.data[i].Product.price;
+    const id_product = data[i].id_product;
     const quantity = data[i].quantity;
     const updateQty = {
-      itemsId,
+      id_product,
       quantity,
     };
     console.log(updateQty);
@@ -77,13 +81,14 @@ class MyBag extends Component {
     data[i] = {
       ...this.state.data[i],
       quantity: this.state.data[i].quantity + 1,
-      total: this.state.data[i].price * (this.state.data[i].quantity + 1),
+      total:
+        this.state.data[i].Product.price * (this.state.data[i].quantity + 1),
     };
-    totalPrice = totalPrice + this.state.data[i].price;
-    const itemsId = data[i].items_id;
+    totalPrice = totalPrice + this.state.data[i].Product.price;
+    const id_product = data[i].id_product;
     const quantity = data[i].quantity;
     const updateQty = {
-      itemsId,
+      id_product,
       quantity,
     };
     console.log(updateQty);
@@ -99,38 +104,50 @@ class MyBag extends Component {
   deleteCart = () => {
     console.log(this.state.id);
     this.props.deleteCart(this.props.auth.token, this.state.id);
-    this.setState({modalDelete: false, successDelete: true}, ()=>{
+    this.setState({modalDelete: false, successDelete: true}, () => {
       this.props.getCart(this.props.auth.token);
     });
-    // this.refreshCart();
-  };
-
-  refreshCart = () => {
-    this.props.getCart(this.props.auth.token);
-    // if (this.state.data.length === this.props.cart.data.data.length) {
-    //   console.log('sudah sama');
-    // } else {
-    //   this.setState({
-    //     data: this.props.cart.data.data,
-    //     totalPrice: this.props.cart.data['total price'],
-    //   });
-    // }
+    this.onRefresh();
   };
 
   checkout = () => {
     this.props.navigation.navigate('Checkout');
   };
 
+  wait = (timeout) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+  };
+
+  onRefresh = () => {
+    this.setState({refreshing: true});
+    this.props.getCart(this.props.auth.token);
+    this.wait(1500).then(() => this.setState({refreshing: false}));
+    this.wait(1000).then(() =>
+      this.setState({
+        data: this.props.cart.data.result,
+        totalPrice: this.props.cart.data['total price'],
+      }),
+    );
+  };
+
   render() {
-    console.log(this.props);
     const {data} = this.state;
+    console.log(data);
     return (
       <SafeAreaView style={style.parent}>
-        {this.props.cart.data.data == undefined && <Spinner />}
+        {data == undefined && <Spinner />}
         {!(data == undefined) && (
-          <ScrollView>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh}
+              />
+            }>
             <Text style={style.title}>My Bag</Text>
-            {data.length !== 0 &&
+            {data.length > 0 &&
               data.map((item, index) => (
                 <Card
                   style={style.card}
@@ -139,7 +156,7 @@ class MyBag extends Component {
                     <Body style={style.body}>
                       <View style={style.imageWrap}>
                         <Image
-                          source={{uri: `${API_URL}${item.picture1}`}}
+                          source={{uri: `${API_URL}${item.Product_picture.picture}`}}
                           style={style.image}
                         />
                       </View>
@@ -148,9 +165,9 @@ class MyBag extends Component {
                           <View style={{width: '90%'}}>
                             <View style={{height: 48}}>
                               <Text style={style.nameProduct}>
-                                {item.name.length > 50
-                                  ? item.name.slice(0, 51).concat('...')
-                                  : item.name}
+                                {item.Product.name.length > 50
+                                  ? item.Product.name.slice(0, 51).concat('...')
+                                  : item.Product.name}
                               </Text>
                             </View>
                             <Text style={style.shop}>Zalora Cloth</Text>
@@ -168,7 +185,6 @@ class MyBag extends Component {
                               <View style={style.modalWrap}>
                                 <TouchableOpacity
                                   style={style.insideModal}
-                                  // onPress={() => this.pageProduct(item.id)}
                                   onPress={() => this.deleteCart()}>
                                   <Text style={{fontSize: 10}}>
                                     Delete from the list

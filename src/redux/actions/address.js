@@ -5,13 +5,13 @@ export default {
   getAddress: (token) => {
     return {
       type: 'GET_ADDRESS',
-      payload: http(token).get('/users/address'),
+      payload: http(token).get('/user/address'),
     };
   },
   addAddress: (token, data) => {
     return {
       type: 'ADD_ADDRESS',
-      payload: http(token).post('/users/address', qs.stringify(data)),
+      payload: http(token).post('/user/address', qs.stringify(data)),
     };
   },
 };

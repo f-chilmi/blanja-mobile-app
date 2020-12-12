@@ -14,14 +14,14 @@ export default {
       payload: http(token).post('/cart', qs.stringify(data)),
     };
   },
-  updateCart: (token, qty) => {
+  updateCart: (token, data) => {
     return {
       type: 'UPDATE_CART',
-      payload: http(token).patch('/cart', qs.stringify(qty)),
+      payload: http(token).patch('/cart', qs.stringify(data)),
     };
   },
   deleteCart: (token, id) => ({
     type: 'DELETE_CART',
-    payload: http(token).delete(`/cart/${id}`)
-  })
+    payload: http(token).delete(`/cart/${id}`),
+  }),
 };

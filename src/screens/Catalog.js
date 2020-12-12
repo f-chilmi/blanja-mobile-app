@@ -9,21 +9,11 @@ import {
   TouchableOpacity,
   Text,
   SafeAreaView,
-  ScrollView,
   FlatList,
 } from 'react-native';
-import {
-  Root,
-  Card,
-  CardItem,
-  Icon as IconNav,
-  Button,
-  Item,
-  Left,
-  Body,
-  Right,
-} from 'native-base';
+import {Root, Card, CardItem, Icon as IconNav, Spinner} from 'native-base';
 import {Header} from 'react-native-elements';
+// import {API_URL} from '@env';
 
 import homeAction from '../redux/actions/home';
 
@@ -34,15 +24,31 @@ import Activated from '../assets/activated.png';
 
 const Catalog = ({route, navigation}) => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const getData = () => {
+    setLoading(true);
+    dispatch(homeAction.sort(route.params.sort));
+    setLoading(false);
+  };
   const home = useSelector((state) => state.home);
-  const data = home.dataCatalog;
+  let data = {};
+  if (home.dataNext == undefined) {
+    data = home.dataCatalog;
+  } else {
+    data = home.dataNext;
+  }
+  const {isLoading} = home;
+  console.log(home);
+  console.log(route.params.sort);
+  // console.log(home.dataNext == undefined)
   const [sort, setSort] = useState(false);
   const toggle = () => {
     console.log('clicked');
     setSort(!sort);
   };
+
   useEffect(() => {
-    dispatch(homeAction.sort());
+    getData();
   }, [dispatch]);
 
   const nextPage = () => {
@@ -52,6 +58,7 @@ const Catalog = ({route, navigation}) => {
   };
 
   const pageProduct = (id) => {
+    console.log(id);
     navigation.navigate('PageProduct', {id});
   };
 
@@ -61,7 +68,7 @@ const Catalog = ({route, navigation}) => {
 
   const options = [
     {type: 'Popular', adv: 'sort[rating]=desc'},
-    {type: 'Newest', adv: 'sort[updated_at]=desc'},
+    {type: 'Newest', adv: 'sort[updatedAt]=desc'},
     {type: 'Price: lowest to hight', adv: 'sort[price]=asc'},
     {type: 'Price: highest to low', adv: 'sort[price]=desc'},
   ];
@@ -72,10 +79,9 @@ const Catalog = ({route, navigation}) => {
     setSort(false);
   };
   const urlAdv = home.url.slice(9);
+  const urlAdvance = options.map((item) => item.adv.concat('&'));
   const index = options.map((item) => item.adv.indexOf(urlAdv));
-  // console.log(index);
-  // console.log(options)
-  // console.log(options)
+
   const renderItem = ({item}) => (
     <TouchableOpacity
       style={style.col}
@@ -141,7 +147,7 @@ const Catalog = ({route, navigation}) => {
   return (
     <SafeAreaView style={style.parent}>
       <Header
-        centerComponent={<Text style={style.new}>New</Text>}
+        centerComponent={<Text style={style.new}>Catalog</Text>}
         rightComponent={
           <TouchableOpacity onPress={goToSearch}>
             <Icon name="search" size={20} style={{marginRight: 10}} />
@@ -159,24 +165,35 @@ const Catalog = ({route, navigation}) => {
         <TouchableOpacity onPress={toggle}>
           <View style={style.advFuncIcon}>
             <Icon type="MaterialIcons" name="sort" />
-            {options[0].adv===urlAdv && <Text style={style.subtitle}>Popular</Text>}
-            {options[1].adv===urlAdv && <Text style={style.subtitle}>Newest</Text>}
-            {options[2].adv===urlAdv && <Text style={style.subtitle}>Price: lowest to high</Text>}
-            {options[3].adv===urlAdv && <Text style={style.subtitle}>Price: highest to low</Text>}
+            {urlAdv === urlAdvance[0] && (
+              <Text style={style.subtitle}>Popular</Text>
+            )}
+            {urlAdv === urlAdvance[1] && (
+              <Text style={style.subtitle}>Newest</Text>
+            )}
+            {urlAdv === urlAdvance[2] && (
+              <Text style={style.subtitle}>Price: lowest to high</Text>
+            )}
+            {urlAdv === urlAdvance[3] && (
+              <Text style={style.subtitle}>Price: highest to low</Text>
+            )}
             {/* <Text style={style.subtitle}>options</Text> */}
           </View>
         </TouchableOpacity>
       </View>
       <View style={{flexDirection: 'row'}}>
         <FlatList
-          data={data}
+          data={home.dataCatalog}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           numColumns={2}
           onEndReached={nextPage}
           onEndReachedThreshold={0.5}
+          refreshing={loading}
+          onRefresh={() => dispatch(homeAction.refreshCatalog())}
         />
       </View>
+      {/* {isLoading && <Spinner />} */}
       <BottomSheet
         visible={sort}
         onBackButtonPress={() => setSort(!sort)}
@@ -259,12 +276,12 @@ const style = StyleSheet.create({
   },
   subtitle1: {
     fontSize: 12,
-    marginLeft: 10
+    marginLeft: 10,
   },
   subtitle: {
     fontSize: 12,
     width: 160,
-    marginLeft: 10
+    marginLeft: 10,
   },
   advFunc: {
     flexDirection: 'row',
