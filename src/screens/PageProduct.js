@@ -8,6 +8,8 @@ import {
   Text,
   SafeAreaView,
   ScrollView,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import {Spinner} from 'native-base';
 
@@ -22,7 +24,7 @@ const API_URL = 'http://127.0.0.1:8080';
 
 class PageProduct extends Component {
   state = {
-    id_product: this.props.product.data[0].id,
+    id_product: this.props.route.params.id,
     quantity: 1,
     successAdd: false,
   };
@@ -55,18 +57,31 @@ class PageProduct extends Component {
   };
 
   render() {
-    console.log(this.props.product.data[0].id);
+    console.log(this.props.cart);
     const data = this.props.product.data[0];
     return (
       <SafeAreaView style={style.parent}>
         <ScrollView>
           {data == undefined && <Spinner />}
+          {this.props.cart.isLoading && (
+            <Modal transparent visible>
+              <View style={style.modalView}>
+                <View style={style.alertBox}>
+                  <ActivityIndicator size="large" color="#DB3022" />
+                  <Text style={style.textAlert}>Loading . . .</Text>
+                </View>
+              </View>
+            </Modal>
+          )}
+          {this.props.cart.alertMsg === 'Success added to cart' && this.myBag()}
           {!(data == undefined) && (
             <View>
               <View style={{marginHorizontal: '2%', marginBottom: 25}}>
                 <View style={style.imageWrapper}>
                   <Image
-                    source={{uri: `${API_URL}${data.Product_pictures[0].picture}`}}
+                    source={{
+                      uri: `${API_URL}${data.Product_pictures[0].picture}`,
+                    }}
                     style={style.image}
                   />
                 </View>
@@ -235,5 +250,25 @@ const style = StyleSheet.create({
     marginLeft: '2%',
     marginRight: '2%',
     marginVertical: 10,
+  },
+  modalView: {
+    backgroundColor: 'grey',
+    opacity: 0.8,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  alertBox: {
+    width: 200,
+    height: 150,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textAlert: {
+    color: 'black',
+    marginTop: 20,
+    textAlign: 'center',
   },
 });

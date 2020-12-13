@@ -102,6 +102,16 @@ export default (state = initialState, action) => {
         data: action.payload.data,
       };
     }
+    case 'LOGOUT': {
+      return {
+        data: {},
+        isLogin: false,
+        isLoading: false,
+        isError: false,
+        alertMsg: '',
+        successUpdate: false,
+      };
+    }
     default: {
       return state;
     }

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -10,6 +11,8 @@ import {
   Text,
   SafeAreaView,
   FlatList,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import {Root, Card, CardItem, Icon as IconNav, Spinner} from 'native-base';
 import {Header} from 'react-native-elements';
@@ -30,13 +33,8 @@ const Catalog = ({route, navigation}) => {
     dispatch(homeAction.sort(route.params.sort));
     setLoading(false);
   };
-  const home = useSelector((state) => state.home);
   let data = {};
-  if (home.dataNext == undefined) {
-    data = home.dataCatalog;
-  } else {
-    data = home.dataNext;
-  }
+  const home = useSelector((state) => state.home);
   const {isLoading} = home;
   console.log(home);
   console.log(route.params.sort);
@@ -75,7 +73,7 @@ const Catalog = ({route, navigation}) => {
 
   const goToSort = (adv) => {
     console.log(adv);
-    dispatch(homeAction.sort(adv));
+    dispatch(homeAction.refreshCatalogBySort(adv));
     setSort(false);
   };
   const urlAdv = home.url.slice(9);
@@ -90,7 +88,7 @@ const Catalog = ({route, navigation}) => {
       <Card style={style.cardWrapper}>
         <CardItem cardBody style={{flexDirection: 'column'}}>
           <Image
-            source={{uri: `${API_URL}${item.picture1}`}}
+            source={{uri: `${API_URL}${item.Product_pictures[0].picture}`}}
             style={style.cardImage}
           />
           <View style={style.contentCard}>
@@ -156,7 +154,7 @@ const Catalog = ({route, navigation}) => {
         containerStyle={{backgroundColor: 'white'}}
       />
       <View style={style.advFunc}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={toggle}>
           <View style={style.advFuncIcon}>
             <IconNav type="MaterialIcons" name="sort" />
             <Text style={style.subtitle1}> Filters</Text>
@@ -182,6 +180,16 @@ const Catalog = ({route, navigation}) => {
         </TouchableOpacity>
       </View>
       <View style={{flexDirection: 'row'}}>
+        {home.isLoading && (
+          <Modal transparent visible>
+            <View style={style.modalView}>
+              <View style={style.alertBox}>
+                <ActivityIndicator size="large" color="#DB3022" />
+                <Text style={style.textAlert}>Loading . . .</Text>
+              </View>
+            </View>
+          </Modal>
+        )}
         <FlatList
           data={home.dataCatalog}
           renderItem={renderItem}
@@ -315,5 +323,25 @@ const style = StyleSheet.create({
     // borderColor: 'black',
     width: '100%',
     justifyContent: 'center',
+  },
+  modalView: {
+    backgroundColor: 'grey',
+    opacity: 0.8,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  alertBox: {
+    width: 200,
+    height: 150,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textAlert: {
+    color: 'black',
+    marginTop: 20,
+    textAlign: 'center',
   },
 });

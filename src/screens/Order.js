@@ -3,42 +3,28 @@ import {connect} from 'react-redux';
 import {
   View,
   StyleSheet,
-  Image,
   TouchableOpacity,
   Text,
-  SafeAreaView,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
-import {
-  Button,
-  CheckBox,
-  Card,
-  CardItem,
-  Spinner,
-  Form,
-  Item,
-  Picker,
-  Icon,
-  Left,
-  Body,
-  Right,
-} from 'native-base';
+import {Card, CardItem} from 'native-base';
+import moment from 'moment';
 
 import checkoutAction from '../redux/actions/checkout';
-import addressAction from '../redux/actions/address';
 
 class Order extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isSelected: true,
+      refreshing: false,
     };
   }
 
   componentDidMount() {
     this.props.getCheckout(this.props.auth.token);
-    this.props.getAddress(this.props.auth.token);
-    this.props.payment(this.props.auth.token);
+    this.props.showOrder(this.props.auth.token);
   }
 
   goToshipping = () => {
@@ -48,93 +34,68 @@ class Order extends Component {
   goToOrder = () => {
     this.props.navigation.navigate('Order');
   };
+  wait = (timeout) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+  };
+
+  onRefresh = () => {
+    this.setState({refreshing: true});
+    this.props.showOrder(this.props.auth.token);
+    this.wait(500).then(() => this.setState({refreshing: false}));
+  };
 
   render() {
     console.log(this.props);
-    console.log(this.props.checkout.data.data == undefined);
-    // const dataAddress = this.props.checkout.data.data.address[0];
     return (
       <View style={style.parent}>
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh}
+            />
+          }>
           <Text style={style.myProfile}>My orders</Text>
-          <Card style={style.card}>
-            <CardItem style={style.cardItem}>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Profile')}>
-                <View style={style.flexDir}>
-                  <Text style={style.line1}>Order No1947034</Text>
-                  <Text style={style.line1Right}>05-12-2019</Text>
-                </View>
-                <View style={style.flexDir}>
-                  <Text style={style.line2}>Tracking number: </Text>
-                  <Text style={style.line2Right}> IW3475453455</Text>
-                </View>
-                <View style={style.flexDir}>
-                  <Text style={style.line2}>Quantity: </Text>
-                  <Text style={style.line2Right}> 3</Text>
-                </View>
-                <View style={style.flexDir}>
-                  <Text style={style.line2}>Total amount: </Text>
-                  <Text style={style.line2Right}> Rp 450000</Text>
-                </View>
-                <View style={style.line4}>
-                  <Text style={style.line4Text}>Delivered</Text>
-                </View>
-              </TouchableOpacity>
-            </CardItem>
-          </Card>
-          <Card style={style.card}>
-            <CardItem style={style.cardItem}>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Profile')}>
-                <View style={style.flexDir}>
-                  <Text style={style.line1}>Order No1947034</Text>
-                  <Text style={style.line1Right}>05-12-2019</Text>
-                </View>
-                <View style={style.flexDir}>
-                  <Text style={style.line2}>Tracking number: </Text>
-                  <Text style={style.line2Right}> IW3475453455</Text>
-                </View>
-                <View style={style.flexDir}>
-                  <Text style={style.line2}>Quantity: </Text>
-                  <Text style={style.line2Right}> 3</Text>
-                </View>
-                <View style={style.flexDir}>
-                  <Text style={style.line2}>Total amount: </Text>
-                  <Text style={style.line2Right}> Rp 450000</Text>
-                </View>
-                <View style={style.line4}>
-                  <Text style={style.line4Text}>Delivered</Text>
-                </View>
-              </TouchableOpacity>
-            </CardItem>
-          </Card>
-          <Card style={style.card}>
-            <CardItem style={style.cardItem}>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Profile')}>
-                <View style={style.flexDir}>
-                  <Text style={style.line1}>Order No1947034</Text>
-                  <Text style={style.line1Right}>05-12-2019</Text>
-                </View>
-                <View style={style.flexDir}>
-                  <Text style={style.line2}>Tracking number: </Text>
-                  <Text style={style.line2Right}> IW3475453455</Text>
-                </View>
-                <View style={style.flexDir}>
-                  <Text style={style.line2}>Quantity: </Text>
-                  <Text style={style.line2Right}> 3</Text>
-                </View>
-                <View style={style.flexDir}>
-                  <Text style={style.line2}>Total amount: </Text>
-                  <Text style={style.line2Right}> Rp 450000</Text>
-                </View>
-                <View style={style.line4}>
-                  <Text style={style.line4Text}>Delivered</Text>
-                </View>
-              </TouchableOpacity>
-            </CardItem>
-          </Card>
+          {this.props.checkout.history == undefined && (
+            <Text>No history transaction</Text>
+          )}
+          {this.props.checkout.history &&
+            this.props.checkout.history.length > 0 &&
+            this.props.checkout.history.map((item) => (
+              <Card style={style.card}>
+                <CardItem style={style.cardItem}>
+                  <TouchableOpacity
+                    onPress={() => this.props.navigation.navigate('Profile')}>
+                    <View style={style.flexDir}>
+                      <Text style={style.line1}>Order No194703{item.id}</Text>
+                      <Text style={style.line1Right}>
+                        {moment(item.createdAt).format('DD-MM-YYYY')}
+                      </Text>
+                    </View>
+                    <View style={style.flexDir}>
+                      <Text style={style.line2}>Tracking number: </Text>
+                      <Text style={style.line2Right}>
+                        {' '}
+                        IW347545345{item.id}
+                      </Text>
+                    </View>
+                    <View style={style.flexDir}>
+                      <Text style={style.line2}>Quantity: </Text>
+                      <Text style={style.line2Right}> {item.quantity}</Text>
+                    </View>
+                    <View style={style.flexDir}>
+                      <Text style={style.line2}>Total amount: </Text>
+                      <Text style={style.line2Right}> Rp {item.total}</Text>
+                    </View>
+                    <View style={style.line4}>
+                      <Text style={style.line4Text}>{item.status}</Text>
+                    </View>
+                  </TouchableOpacity>
+                </CardItem>
+              </Card>
+            ))}
         </ScrollView>
       </View>
     );
@@ -144,13 +105,10 @@ class Order extends Component {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   checkout: state.checkout,
-  address: state.address,
-  payment: state.checkout,
 });
 const mapDispatchToProps = {
   getCheckout: checkoutAction.getCheckout,
-  payment: checkoutAction.payment,
-  getAddress: addressAction.getAddress,
+  showOrder: checkoutAction.showOrder,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Order);

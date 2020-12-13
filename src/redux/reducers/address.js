@@ -54,6 +54,37 @@ export default (state = initialState, action) => {
         dataAddress: action.payload.data,
       };
     }
+    case 'EDIT_ADDRESS_PENDING': {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case 'EDIT_ADDRESS_REJECTED': {
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        alertMsg: 'There is an error at request data',
+      };
+    }
+    case 'EDIT_ADDRESS_FULFILLED': {
+      return {
+        ...state,
+        isLoading: false,
+        isLogin: true,
+      };
+    }
+    case 'LOGOUT': {
+      return {
+        data: {},
+        dataAddress: {},
+        isLogin: false,
+        isLoading: false,
+        isError: false,
+        alertMsg: '',
+      };
+    }
     default: {
       return state;
     }

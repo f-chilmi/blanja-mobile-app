@@ -12,8 +12,12 @@ import {connect} from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
 // import {API_URL} from '@env';
 
+import store from '../redux/store';
 import profileAction from '../redux/actions/profile';
+import addressAction from '../redux/actions/address';
 import authAction from '../redux/actions/auth';
+import cartAction from '../redux/actions/cart';
+import checkoutAction from '../redux/actions/checkout';
 
 const API_URL = 'http://127.0.0.1:8080';
 
@@ -39,8 +43,17 @@ class Profile extends Component {
   goToSetting = () => {
     this.props.navigation.navigate('Setting');
   };
+  wait = (timeout) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+  };
   logout = () => {
-    this.props.logout();
+    this.props.logoutProfile();
+    this.props.logoutAddress();
+    this.props.logoutCart();
+    this.props.logoutCheckout();
+    this.wait(500).then(() => this.props.logout());
   };
   handleChoosePhoto = () => {
     const options = {
@@ -49,7 +62,6 @@ class Profile extends Component {
       maxHeight: 1000,
     };
     ImagePicker.showImagePicker(options, (response) => {
-      console.log(response);
       if (response.uri) {
         this.setState({image: response});
         const form = new FormData();
@@ -138,7 +150,6 @@ class Profile extends Component {
                   source={{uri: `${API_URL}/${data.picture}`}}
                 />
               )}
-              {console.log(`${API_URL}/${data.picture}`)}
             </View>
             <View style={style.buttonWrapper2}>
               <TouchableOpacity
@@ -167,6 +178,9 @@ class Profile extends Component {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   profile: state.profile,
+  checkout: state.checkout,
+  cart: state.cart,
+  address: state.address,
 });
 
 const mapDispatchToProps = {
@@ -174,6 +188,10 @@ const mapDispatchToProps = {
   updateProfile: profileAction.updateProfile,
   updateImage: profileAction.updateImage,
   logout: authAction.logout,
+  logoutProfile: profileAction.logout,
+  logoutAddress: addressAction.logout,
+  logoutCart: cartAction.logout,
+  logoutCheckout: checkoutAction.logout,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

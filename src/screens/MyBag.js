@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Modal,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import {Card, CardItem, Body, Button, Spinner} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -107,7 +108,6 @@ class MyBag extends Component {
     this.setState({modalDelete: false, successDelete: true}, () => {
       this.props.getCart(this.props.auth.token);
     });
-    this.onRefresh();
   };
 
   checkout = () => {
@@ -123,8 +123,8 @@ class MyBag extends Component {
   onRefresh = () => {
     this.setState({refreshing: true});
     this.props.getCart(this.props.auth.token);
-    this.wait(1500).then(() => this.setState({refreshing: false}));
-    this.wait(1000).then(() =>
+    this.wait(500).then(() => this.setState({refreshing: false}));
+    this.wait(100).then(() =>
       this.setState({
         data: this.props.cart.data.result,
         totalPrice: this.props.cart.data['total price'],
@@ -134,7 +134,6 @@ class MyBag extends Component {
 
   render() {
     const {data} = this.state;
-    console.log(data);
     return (
       <SafeAreaView style={style.parent}>
         {data == undefined && <Spinner />}
@@ -147,6 +146,9 @@ class MyBag extends Component {
               />
             }>
             <Text style={style.title}>My Bag</Text>
+            {this.props.cart.data == undefined && (
+              <Text>Your bag is empty</Text>
+            )}
             {data.length > 0 &&
               data.map((item, index) => (
                 <Card
@@ -156,7 +158,7 @@ class MyBag extends Component {
                     <Body style={style.body}>
                       <View style={style.imageWrap}>
                         <Image
-                          source={{uri: `${API_URL}${item.Product_picture.picture}`}}
+                          source={{uri: `${API_URL}${item.picture}`}}
                           style={style.image}
                         />
                       </View>
@@ -220,6 +222,16 @@ class MyBag extends Component {
                 </Card>
               ))}
           </ScrollView>
+        )}
+        {this.props.cart.isLoading && (
+          <Modal transparent visible>
+            <View style={style.modalView}>
+              <View style={style.alertBox}>
+                <ActivityIndicator size="large" color="#DB3022" />
+                <Text style={style.textAlert}>Loading . . .</Text>
+              </View>
+            </View>
+          </Modal>
         )}
         <View>
           <CardItem style={{flexDirection: 'column'}}>
@@ -379,5 +391,25 @@ const style = StyleSheet.create({
     width: 120,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  modalView: {
+    backgroundColor: 'grey',
+    opacity: 0.8,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  alertBox: {
+    width: 200,
+    height: 150,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textAlert: {
+    color: 'black',
+    marginTop: 20,
+    textAlign: 'center',
   },
 });

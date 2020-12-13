@@ -39,6 +39,10 @@ export default {
     type: 'REFRESH_CATALOG',
     payload: http().get('/public'),
   }),
+  refreshCatalogBySort: (adv) => ({
+    type: 'REFRESH_CATALOG',
+    payload: http().get(`/public?${adv}`),
+  }),
   sortPopular: () => {
     return {
       type: 'GET_CATALOG',

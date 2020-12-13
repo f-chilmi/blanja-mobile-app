@@ -175,7 +175,7 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: false,
-        dataCatalog: action.payload.data.info.findProduct,
+        dataCatalog: action.payload.data.info.findProduct.rows,
         info: action.payload.data.info.pageInfo,
       };
     }

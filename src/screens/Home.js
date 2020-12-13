@@ -311,7 +311,6 @@ class Home extends Component {
             </View>
           </ScrollView>
         )}
-        {dataPopular === undefined && <Spinner />}
         {isLoading && <Spinner />}
       </ScrollView>
     );

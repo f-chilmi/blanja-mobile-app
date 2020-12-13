@@ -14,4 +14,25 @@ export default {
       payload: http(token).post('/user/address', qs.stringify(data)),
     };
   },
+  editPrimary: (token, id, data) => {
+    return {
+      type: 'EDIT_ADDRESS',
+      payload: http(token).patch(
+        `/user/address/primary/${id}`,
+        qs.stringify(data),
+      ),
+    };
+  },
+  editAddress: (token, id, data) => {
+    return {
+      type: 'EDIT_ADDRESS',
+      payload: http(token).patch(
+        `/user/address/edit/${id}`,
+        qs.stringify(data),
+      ),
+    };
+  },
+  logout: () => ({
+    type: 'LOGOUT',
+  }),
 };

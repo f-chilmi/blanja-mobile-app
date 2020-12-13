@@ -1,6 +1,13 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  RefreshControl,
+  ScrollView,
+} from 'react-native';
 import {Button, CheckBox, Card, CardItem, Spinner} from 'native-base';
 
 import checkoutAction from '../redux/actions/checkout';
@@ -11,6 +18,7 @@ class Checkout extends Component {
     super(props);
     this.state = {
       isSelected: true,
+      refreshing: false,
     };
   }
 
@@ -25,17 +33,56 @@ class Checkout extends Component {
   };
 
   goToOrder = () => {
+    const qty = this.props.cart.data.result.map((item) => item.quantity);
+    const add = (accumulator, currentValue) => accumulator + currentValue;
+    const quantity = qty.reduce(add);
+    let status;
+    if (
+      this.props.checkout.dataPayment.totalAll >=
+      this.props.checkout.dataPayment.balance
+    ) {
+      status = 'Waiting for payment';
+    } else {
+      status = 'Paid';
+    }
+    const data = {
+      id_seller: 1,
+      quantity: quantity,
+      total: this.props.checkout.dataPayment.totalAll,
+      status: status,
+    };
+    this.props.addOrder(this.props.auth.token, data);
     this.props.navigation.navigate('Order');
   };
 
+  wait = (timeout) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, timeout);
+    });
+  };
+
+  onRefresh = () => {
+    this.setState({refreshing: true});
+    this.props.getCheckout(this.props.auth.token);
+    this.props.getAddress(this.props.auth.token);
+    this.props.payment(this.props.auth.token);
+    this.wait(500).then(() => this.setState({refreshing: false}));
+  };
+
   render() {
-    console.log(this.props.checkout.data.data.PrimaryAddress.length < 1);
     return (
       <View>
         {this.props.checkout.data.data == undefined && <Spinner />}
         {this.props.checkout.isLoading && <Spinner />}
         {!(this.props.checkout.data == undefined) && (
-          <View style={style.parent}>
+          <ScrollView
+            style={style.parent}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh}
+              />
+            }>
             <Text style={style.shipping}>Shipping address</Text>
             {this.props.checkout.data.data.PrimaryAddress.length < 1 && (
               <Card>
@@ -94,23 +141,18 @@ class Checkout extends Component {
             <View style={style.payment}>
               <Text style={style.payText}>Payment</Text>
               <View style={style.blanjaWrap}>
-                <Text style={style.blanjaPay}>BlanjaPay</Text>
-                <CheckBox
-                  value={this.state.isSelected}
-                  onValueChange={() =>
-                    this.setState({isSelected: !this.state.isSelected})
-                  }
-                  style={style.checkbox}
-                />
+                <Text style={style.blanjaPay}>
+                  BlanjaPay
+                  <Text style={style.balanceText}>
+                    {' '}
+                    (Balance: Rp{this.props.checkout.dataPayment.balance})
+                  </Text>
+                </Text>
               </View>
             </View>
 
             <Card transparent style={{alignSelf: 'flex-end'}}>
-              <CardItem
-                style={{
-                  flexDirection: 'column',
-                  backgroundColor: 'transparent',
-                }}>
+              <CardItem style={style.cardItem}>
                 <View style={style.textWrap}>
                   <Text style={style.leftSide}>Order:</Text>
                   <Text style={style.rightSide}>
@@ -137,7 +179,7 @@ class Checkout extends Component {
                 </Button>
               </CardItem>
             </Card>
-          </View>
+          </ScrollView>
         )}
       </View>
     );
@@ -149,11 +191,13 @@ const mapStateToProps = (state) => ({
   checkout: state.checkout,
   address: state.address,
   payment: state.checkout,
+  cart: state.cart,
 });
 const mapDispatchToProps = {
   getCheckout: checkoutAction.getCheckout,
   payment: checkoutAction.payment,
   getAddress: addressAction.getAddress,
+  addOrder: checkoutAction.addOrder,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Checkout);
@@ -161,6 +205,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(Checkout);
 const style = StyleSheet.create({
   parent: {
     padding: '2%',
+  },
+  balanceText: {
+    color: 'grey',
+    fontSize: 9,
+  },
+  cardItem: {
+    flexDirection: 'column',
+    backgroundColor: 'transparent',
   },
   textUp: {
     flexDirection: 'row',

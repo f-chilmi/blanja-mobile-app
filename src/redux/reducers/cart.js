@@ -102,6 +102,17 @@ export default (state = initialState, action) => {
         alertMsg: 'Success delete item from cart',
       };
     }
+    case 'LOGOUT': {
+      return {
+        data: {},
+        isLogin: false,
+        isLoading: false,
+        isError: false,
+        alertMsg: '',
+        alertOpen: false,
+        successAdd: {},
+      };
+    }
     default: {
       return state;
     }

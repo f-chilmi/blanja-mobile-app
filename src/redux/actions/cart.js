@@ -24,4 +24,7 @@ export default {
     type: 'DELETE_CART',
     payload: http(token).delete(`/cart/${id}`),
   }),
+  logout: () => ({
+    type: 'LOGOUT',
+  }),
 };

@@ -2,29 +2,17 @@ import React, {Component} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import homeAction from '../redux/actions/home';
 import {connect} from 'react-redux';
-import {API_URL} from '@env';
+// import {API_URL} from '@env';
+const API_URL = 'http://127.0.0.1:8080';
 import {
   View,
   StyleSheet,
   Image,
   TouchableOpacity,
   Text,
-  SafeAreaView,
   ScrollView,
-  FlatList,
 } from 'react-native';
-import {
-  Input,
-  Title,
-  Card,
-  CardItem,
-  ActionSheet,
-  Button,
-  Item,
-  Left,
-  Body,
-  Right,
-} from 'native-base';
+import {Input, Card, CardItem, Item} from 'native-base';
 import Star from '../assets/Star.png';
 import Activated from '../assets/activated.png';
 
@@ -40,12 +28,12 @@ class Search extends Component {
     console.log(this.props.home.dataSearch);
     return (
       <View style={{flex: 1, padding: '2%'}}>
-        <Item searchbar rounded>
+        <Item searchbar rounded style={style.search}>
           <Icon style={{marginLeft: 15}} name="search" size={20} color="grey" />
           <Input
             style={{marginLeft: 10}}
-            returnKeyType='search'
-            onSubmitEditing={()=>this.props.searchItem(this.state.search)}
+            returnKeyType="search"
+            onSubmitEditing={() => this.props.searchItem(this.state.search)}
             placeholder="Search"
             onChangeText={(text) => this.setState({search: text})}
           />
@@ -61,9 +49,14 @@ class Search extends Component {
                   <Card style={style.cardWrapper}>
                     <CardItem cardBody style={{flexDirection: 'column'}}>
                       <Image
-                        source={{uri: `${API_URL}${item.picture1}`}}
+                        source={{
+                          uri: `${API_URL}${item.Product_pictures[0].picture}`,
+                        }}
                         style={style.cardImage}
                       />
+                      {console.log(
+                        `${API_URL}${item.Product_pictures[0].picture}`,
+                      )}
                       <View style={style.contentCard}>
                         <View style={style.starWrapper}>
                           {item.rating < 0.5 &&
@@ -154,6 +147,9 @@ const style = StyleSheet.create({
   parent: {
     backgroundColor: 'white',
     flex: 1,
+  },
+  search: {
+    marginTop: 20,
   },
   col: {
     height: 310,

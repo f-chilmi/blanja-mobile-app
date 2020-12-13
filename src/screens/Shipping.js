@@ -4,16 +4,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
-  SafeAreaView,
   ScrollView,
   RefreshControl,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
-import {Button, Card, CardItem, Spinner, Item, Input} from 'native-base';
+import {Button, Card, CardItem, Spinner} from 'native-base';
 import {connect} from 'react-redux';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import store from '../redux/store';
 import addressAction from '../redux/actions/address';
-import profileAction from '../redux/actions/profile';
 
 class Shipping extends Component {
   state = {
@@ -44,21 +42,20 @@ class Shipping extends Component {
       setTimeout(resolve, timeout);
     });
   };
+  changePrimary = (id) => {
+    this.props.editPrimary(this.props.auth.token, id, {isPrimary: true});
+    this.props.getAddress(this.props.auth.token);
+  };
 
   onRefresh = () => {
     this.setState({refreshing: true});
     this.props.getAddress(this.props.auth.token);
-    this.wait(2000).then(() => this.setState({refreshing: false}));
+    this.wait(500).then(() => this.setState({refreshing: false}));
   };
   render() {
     const {data} = this.props.address;
-    console.log(this.props.address);
     return (
       <View style={style.parent}>
-        {/* <Item searchbar rounded>
-          <Icon style={{marginLeft: 15}} name="search" size={20} color="grey" />
-          <Input style={{marginLeft: 10}} placeholder="Search" />
-        </Item> */}
         <Text style={style.shippingText}>Shipping address</Text>
         {data == undefined && this.props.address.isLoading && <Spinner />}
         {data == undefined &&
@@ -73,27 +70,40 @@ class Shipping extends Component {
                 onRefresh={this.onRefresh}
               />
             }>
+            {this.props.address.isLoading && (
+              <Modal transparent visible>
+                <View style={style.modalView}>
+                  <View style={style.alertBox}>
+                    <ActivityIndicator size="large" color="#DB3022" />
+                    <Text style={style.textAlert}>Loading . . .</Text>
+                  </View>
+                </View>
+              </Modal>
+            )}
             {data.length > 0 &&
               data.map((item) => (
-                <Card>
-                  <CardItem style={{flexDirection: 'column'}}>
-                    <View style={style.textUp}>
-                      <View style={style.name}>
-                        <Text>{item.recipientsName}</Text>
+                <TouchableOpacity onPress={() => this.changePrimary(item.id)}>
+                  <Card
+                    style={item.isPrimary ? style.cardTrue : style.cardFalse}>
+                    <CardItem style={{flexDirection: 'column'}}>
+                      <View style={style.textUp}>
+                        <View style={style.name}>
+                          <Text>{item.recipientsName}</Text>
+                        </View>
+                        <TouchableOpacity
+                          onPress={() => this.changeAddress(item.id)}>
+                          <Text style={style.change}>Change</Text>
+                        </TouchableOpacity>
                       </View>
-                      <TouchableOpacity
-                        onPress={() => this.changeAddress(item.id)}>
-                        <Text style={style.change}>Change</Text>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={style.address}>
-                      <Text style={style.addresstext}>{item.address}</Text>
-                      <Text style={style.addresstext}>
-                        +62 {item.recipientsPhone}
-                      </Text>
-                    </View>
-                  </CardItem>
-                </Card>
+                      <View style={style.address}>
+                        <Text style={style.addresstext}>{item.address}</Text>
+                        <Text style={style.addresstext}>
+                          +62 {item.recipientsPhone}
+                        </Text>
+                      </View>
+                    </CardItem>
+                  </Card>
+                </TouchableOpacity>
               ))}
           </ScrollView>
         )}
@@ -109,6 +119,14 @@ const style = StyleSheet.create({
   parent: {
     padding: '3%',
     flex: 1,
+  },
+  cardTrue: {
+    borderColor: '#DB3022',
+    borderWidth: 1.5,
+  },
+  cardFalse: {
+    borderColor: 'transparent',
+    borderWidth: 1,
   },
   shippingText: {
     marginVertical: 10,
@@ -142,6 +160,26 @@ const style = StyleSheet.create({
     color: 'black',
     fontSize: 14,
   },
+  modalView: {
+    backgroundColor: 'grey',
+    opacity: 0.8,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  alertBox: {
+    width: 200,
+    height: 150,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textAlert: {
+    color: 'black',
+    marginTop: 20,
+    textAlign: 'center',
+  },
 });
 
 const mapStateToProps = (state) => ({
@@ -150,9 +188,9 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 const mapDispatchToProps = {
-  // getProfile: profileAction.getProfile,
   getAddress: addressAction.getAddress,
   addAddress: addressAction.addAddress,
+  editPrimary: addressAction.editPrimary,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Shipping);

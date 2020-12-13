@@ -3,27 +3,12 @@ import {API_URL} from '@env';
 import {
   View,
   StyleSheet,
-  Image,
-  TouchableOpacity,
   Text,
   TextInput,
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import {
-  Button,
-  Spinner,
-  Card,
-  CardItem,
-  Row,
-  Form,
-  Item,
-  Picker,
-  Icon,
-  Left,
-  Body,
-  Right,
-} from 'native-base';
+import {Button, Spinner} from 'native-base';
 import {connect} from 'react-redux';
 import addressAction from '../redux/actions/address';
 
@@ -62,8 +47,20 @@ class ChangeAddress extends Component {
       console.log('belum siap');
     }
   }
+  changeAddress = () => {
+    const data = {
+      nameAddress: this.state.nameAddress,
+      recipientsName: this.state.recipientsName,
+      recipientsPhone: this.state.recipientsPhone,
+      address: this.state.address,
+      postalCode: this.state.postalCode,
+      city: this.state.city,
+    };
+    const id = this.props.route.params.id;
+    this.props.editAddress(this.props.auth.token, id, data);
+    this.props.getAddress(this.props.auth.token);
+  };
   render() {
-    console.log(this.props);
     const {
       nameAddress,
       recipientsName,
@@ -133,7 +130,7 @@ class ChangeAddress extends Component {
                 <Button
                   block
                   style={style.buttonCheckOut}
-                  onPress={this.goToshipping}>
+                  onPress={this.changeAddress}>
                   <Text style={style.textCheckOut}>SAVE ADDRESS</Text>
                 </Button>
               </View>
@@ -150,7 +147,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = {
   getAddress: addressAction.getAddress,
-  // addAddress: addressAction.addAddress,
+  editAddress: addressAction.editAddress,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChangeAddress);
