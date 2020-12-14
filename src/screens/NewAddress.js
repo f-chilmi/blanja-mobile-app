@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 import {
   View,
   StyleSheet,
-  Image,
-  TouchableOpacity,
   Text,
   TextInput,
   SafeAreaView,
   ScrollView,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import {Button} from 'native-base';
 import {connect} from 'react-redux';
@@ -44,9 +44,25 @@ class NewAddress extends Component {
     this.props.addAddress(this.props.auth.token, data);
   };
 
+  goToshipping = () => {
+    this.props.navigation.navigate('Shipping');
+  };
+
   render() {
     return (
       <SafeAreaView>
+        {this.props.address.alertMsg === 'New address added' &&
+          this.goToshipping()}
+        {this.props.address.isLoading && (
+          <Modal transparent visible>
+            <View style={style.modalView}>
+              <View style={style.alertBox}>
+                <ActivityIndicator size="large" color="#DB3022" />
+                <Text style={style.textAlert}>Loading . . .</Text>
+              </View>
+            </View>
+          </Modal>
+        )}
         <ScrollView>
           <View style={style.parentContent}>
             <View style={style.inputWrapper}>
@@ -147,5 +163,25 @@ const style = StyleSheet.create({
   textCheckOut: {
     color: 'white',
     fontSize: 14,
+  },
+  modalView: {
+    backgroundColor: 'grey',
+    opacity: 0.8,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  alertBox: {
+    width: 200,
+    height: 150,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textAlert: {
+    color: 'black',
+    marginTop: 20,
+    textAlign: 'center',
   },
 });

@@ -12,8 +12,8 @@ import {connect} from 'react-redux';
 
 import homeAction from '../redux/actions/home';
 
-const API_URL = 'http://127.0.0.1:8080';
-// import {API_URL} from '@env';
+// const API_URL = 'http://127.0.0.1:8080';
+import {API_URL} from '@env';
 
 class Category extends Component {
   componentDidMount = () => {

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import SplashScreen from 'react-native-splash-screen';
-// import {API_URL} from '@env';
+import {API_URL} from '@env';
 import {
   View,
   StyleSheet,
@@ -32,8 +32,7 @@ import Activated from '../assets/activated.png';
 
 import homeAction from '../redux/actions/home';
 
-const API_URL = 'http://127.0.0.1:8080';
-// import {API_URL} from '@env';
+// const API_URL = 'http://127.0.0.1:8080';
 
 class Home extends Component {
   componentDidMount() {

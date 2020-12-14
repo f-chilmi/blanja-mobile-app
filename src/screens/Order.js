@@ -7,6 +7,8 @@ import {
   Text,
   ScrollView,
   RefreshControl,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import {Card, CardItem} from 'native-base';
 import moment from 'moment';
@@ -60,6 +62,16 @@ class Order extends Component {
           <Text style={style.myProfile}>My orders</Text>
           {this.props.checkout.history == undefined && (
             <Text>No history transaction</Text>
+          )}
+          {this.props.checkout.isLoading && (
+            <Modal transparent visible>
+              <View style={style.modalView}>
+                <View style={style.alertBox}>
+                  <ActivityIndicator size="large" color="#DB3022" />
+                  <Text style={style.textAlert}>Loading . . .</Text>
+                </View>
+              </View>
+            </Modal>
           )}
           {this.props.checkout.history &&
             this.props.checkout.history.length > 0 &&
@@ -167,5 +179,25 @@ const style = StyleSheet.create({
     color: 'green',
     marginLeft: 'auto',
     marginBottom: 3,
+  },
+  modalView: {
+    backgroundColor: 'grey',
+    opacity: 0.8,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  alertBox: {
+    width: 200,
+    height: 150,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textAlert: {
+    color: 'black',
+    marginTop: 20,
+    textAlign: 'center',
   },
 });

@@ -3,11 +3,10 @@ import {
   View,
   Text,
   Modal,
-  Alert,
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  TouchableHighlight,
+  ActivityIndicator,
 } from 'react-native';
 import {connect} from 'react-redux';
 import moment from 'moment';
@@ -57,6 +56,7 @@ class Setting extends Component {
     const {oldPassword, newPassword, confirmNewPassword} = this.state;
     const data = {oldPassword, newPassword, confirmNewPassword};
     this.props.changePassword(this.props.auth.token, data);
+    this.setState({modalPersonal: false});
   };
   render() {
     const {data} = this.props.profile;
@@ -64,6 +64,16 @@ class Setting extends Component {
     return (
       <View style={style.parent}>
         <Text style={style.settingText}>Settings</Text>
+        {this.props.profile.isLoading && (
+          <Modal transparent visible>
+            <View style={style.modalView}>
+              <View style={style.alertBox}>
+                <ActivityIndicator size="large" color="#DB3022" />
+                <Text style={style.textAlert}>Loading . . .</Text>
+              </View>
+            </View>
+          </Modal>
+        )}
         <View style={style.wrapper}>
           <View style={style.leftText}>
             <Text style={style.passwordText}>Personal information</Text>
@@ -278,5 +288,25 @@ const style = StyleSheet.create({
   textInput: {
     borderBottomWidth: 1,
     borderBottomColor: 'grey',
+  },
+  modalView: {
+    backgroundColor: 'grey',
+    opacity: 0.8,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  alertBox: {
+    width: 200,
+    height: 150,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textAlert: {
+    color: 'black',
+    marginTop: 20,
+    textAlign: 'center',
   },
 });

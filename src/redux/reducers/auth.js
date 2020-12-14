@@ -13,6 +13,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoading: true,
+        alertMsg: 'login loading',
       };
     }
     case 'AUTH_USER_REJECTED': {
@@ -30,6 +31,7 @@ export default (state = initialState, action) => {
         isLoading: false,
         isLogin: true,
         token: action.payload.data.token,
+        alertMsg: '',
       };
     }
     case 'SET_TOKEN': {
@@ -44,6 +46,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoading: true,
+        alertMsg: 'register loading',
       };
     }
     case 'SIGNUP_REJECTED': {
@@ -59,9 +62,6 @@ export default (state = initialState, action) => {
         ...state,
         isLoading: false,
         isLogin: false,
-        email: action.payload.data.success
-          ? action.payload.data.result.email
-          : '',
         alertMsg: action.payload.data.message,
       };
     }

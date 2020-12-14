@@ -8,7 +8,7 @@ import {
   RefreshControl,
   ScrollView,
 } from 'react-native';
-import {Button, CheckBox, Card, CardItem, Spinner} from 'native-base';
+import {Button, Card, CardItem, Spinner} from 'native-base';
 
 import checkoutAction from '../redux/actions/checkout';
 import addressAction from '../redux/actions/address';
@@ -70,6 +70,7 @@ class Checkout extends Component {
   };
 
   render() {
+    console.log(this.props);
     return (
       <View>
         {this.props.checkout.data.data == undefined && <Spinner />}
@@ -84,59 +85,66 @@ class Checkout extends Component {
               />
             }>
             <Text style={style.shipping}>Shipping address</Text>
-            {this.props.checkout.data.data.PrimaryAddress.length < 1 && (
-              <Card>
-                <CardItem style={{flexDirection: 'column'}}>
-                  <View style={style.textUp}>
-                    <View style={style.name}>
-                      <Text>No primary address found. add primary address</Text>
+            {Object.keys(this.props.checkout.data).length > 0 &&
+              this.props.checkout.data.data.PrimaryAddress.length < 1 && (
+                <Card>
+                  <CardItem style={{flexDirection: 'column'}}>
+                    <View style={style.textUp}>
+                      <View style={style.name}>
+                        <Text>
+                          No primary address found. add primary address
+                        </Text>
+                      </View>
+                      <TouchableOpacity onPress={this.goToshipping}>
+                        <Text style={style.change}>Add</Text>
+                      </TouchableOpacity>
                     </View>
-                    <TouchableOpacity onPress={this.goToshipping}>
-                      <Text style={style.change}>Add</Text>
-                    </TouchableOpacity>
-                  </View>
-                </CardItem>
-              </Card>
-            )}
-            {this.props.checkout.data.data.PrimaryAddress.length > 0 && (
-              <Card>
-                <CardItem style={{flexDirection: 'column'}}>
-                  <View style={style.textUp}>
-                    <View style={style.name}>
+                  </CardItem>
+                </Card>
+              )}
+            {Object.keys(this.props.checkout.data).length > 0 &&
+              this.props.checkout.data.data.PrimaryAddress.length > 0 && (
+                <Card>
+                  <CardItem style={{flexDirection: 'column'}}>
+                    <View style={style.textUp}>
+                      <View style={style.name}>
+                        <Text>
+                          {
+                            this.props.checkout.data.data.PrimaryAddress[0]
+                              .recipientsName
+                          }
+                        </Text>
+                      </View>
+                      <TouchableOpacity onPress={this.goToshipping}>
+                        <Text style={style.change}>Change</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={style.address}>
                       <Text>
                         {
                           this.props.checkout.data.data.PrimaryAddress[0]
-                            .recipientsName
+                            .address
+                        }
+                        {', '}
+                        {
+                          this.props.checkout.data.data.PrimaryAddress[0].city
+                        }{' '}
+                        {
+                          this.props.checkout.data.data.PrimaryAddress[0]
+                            .postalCode
+                        }
+                      </Text>
+                      <Text style={style.phone}>
+                        +62{' '}
+                        {
+                          this.props.checkout.data.data.PrimaryAddress[0]
+                            .recipientsPhone
                         }
                       </Text>
                     </View>
-                    <TouchableOpacity onPress={this.goToshipping}>
-                      <Text style={style.change}>Change</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={style.address}>
-                    <Text>
-                      {this.props.checkout.data.data.PrimaryAddress[0].address}
-                      {', '}
-                      {
-                        this.props.checkout.data.data.PrimaryAddress[0].city
-                      }{' '}
-                      {
-                        this.props.checkout.data.data.PrimaryAddress[0]
-                          .postalCode
-                      }
-                    </Text>
-                    <Text style={style.phone}>
-                      +62{' '}
-                      {
-                        this.props.checkout.data.data.PrimaryAddress[0]
-                          .recipientsPhone
-                      }
-                    </Text>
-                  </View>
-                </CardItem>
-              </Card>
-            )}
+                  </CardItem>
+                </Card>
+              )}
 
             <View style={style.payment}>
               <Text style={style.payText}>Payment</Text>
@@ -174,6 +182,12 @@ class Checkout extends Component {
                 <Button
                   block
                   style={style.buttonCheckOut}
+                  disabled={
+                    Object.keys(this.props.checkout.data).length > 0 &&
+                    this.props.checkout.data.data.PrimaryAddress.length < 1
+                      ? true
+                      : false
+                  }
                   onPress={this.goToOrder}>
                   <Text style={style.textCheckOut}>SUBMIT ORDER</Text>
                 </Button>

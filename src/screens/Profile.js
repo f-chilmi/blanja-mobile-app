@@ -10,16 +10,15 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {connect} from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
-// import {API_URL} from '@env';
+import {API_URL} from '@env';
 
-import store from '../redux/store';
 import profileAction from '../redux/actions/profile';
 import addressAction from '../redux/actions/address';
 import authAction from '../redux/actions/auth';
 import cartAction from '../redux/actions/cart';
 import checkoutAction from '../redux/actions/checkout';
 
-const API_URL = 'http://127.0.0.1:8080';
+// const API_URL = 'http://127.0.0.1:8080';
 
 class Profile extends Component {
   constructor(props) {

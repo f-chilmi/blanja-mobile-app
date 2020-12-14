@@ -16,11 +16,11 @@ import {
 } from 'react-native';
 import {Root, Card, CardItem, Icon as IconNav, Spinner} from 'native-base';
 import {Header} from 'react-native-elements';
-// import {API_URL} from '@env';
+import {API_URL} from '@env';
 
 import homeAction from '../redux/actions/home';
 
-const API_URL = 'http://127.0.0.1:8080';
+// const API_URL = 'http://127.0.0.1:8080';
 
 import Star from '../assets/Star.png';
 import Activated from '../assets/activated.png';

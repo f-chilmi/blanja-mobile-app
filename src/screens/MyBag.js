@@ -17,8 +17,8 @@ import {connect} from 'react-redux';
 
 import cartAction from '../redux/actions/cart';
 
-const API_URL = 'http://127.0.0.1:8080';
-// import {API_URL} from '@env';
+// const API_URL = 'http://127.0.0.1:8080';
+import {API_URL} from '@env';
 
 class MyBag extends Component {
   state = {
@@ -149,7 +149,8 @@ class MyBag extends Component {
             {this.props.cart.data == undefined && (
               <Text>Your bag is empty</Text>
             )}
-            {data.length > 0 &&
+            {!(this.props.cart.data == undefined) &&
+              data.length > 0 &&
               data.map((item, index) => (
                 <Card
                   style={style.card}
@@ -237,12 +238,18 @@ class MyBag extends Component {
           <CardItem style={{flexDirection: 'column'}}>
             <View style={style.wrapper}>
               <Text style={style.textGrey}>Total amount:</Text>
-              <Text style={style.textPrice}>Rp{this.state.totalPrice}</Text>
+              <Text style={style.textPrice}>
+                Rp
+                {this.props.cart.data == undefined
+                  ? null
+                  : this.state.totalPrice}
+              </Text>
             </View>
             <View style={style.buttonBlock}>
               <Button
                 block
                 style={style.buttonCheckOut}
+                disabled={this.props.cart.data == undefined ? true : false}
                 onPress={this.checkout}>
                 <Text style={style.textCheckOut}>CHECK OUT</Text>
               </Button>

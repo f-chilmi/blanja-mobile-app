@@ -19,8 +19,8 @@ import Activated from '../assets/activated.png';
 import productAction from '../redux/actions/product';
 import cartAction from '../redux/actions/cart';
 
-const API_URL = 'http://127.0.0.1:8080';
-// import {API_URL} from '@env';
+// const API_URL = 'http://127.0.0.1:8080';
+import {API_URL} from '@env';
 
 class PageProduct extends Component {
   state = {
@@ -64,6 +64,16 @@ class PageProduct extends Component {
         <ScrollView>
           {data == undefined && <Spinner />}
           {this.props.cart.isLoading && (
+            <Modal transparent visible>
+              <View style={style.modalView}>
+                <View style={style.alertBox}>
+                  <ActivityIndicator size="large" color="#DB3022" />
+                  <Text style={style.textAlert}>Loading . . .</Text>
+                </View>
+              </View>
+            </Modal>
+          )}
+          {this.props.product.isLoading && (
             <Modal transparent visible>
               <View style={style.modalView}>
                 <View style={style.alertBox}>

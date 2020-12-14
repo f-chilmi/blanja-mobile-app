@@ -50,8 +50,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        isLogin: true,
         dataAddress: action.payload.data,
+        alertMsg: 'New address added',
       };
     }
     case 'EDIT_ADDRESS_PENDING': {

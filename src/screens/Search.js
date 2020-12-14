@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import homeAction from '../redux/actions/home';
 import {connect} from 'react-redux';
-// import {API_URL} from '@env';
-const API_URL = 'http://127.0.0.1:8080';
+import {API_URL} from '@env';
+// const API_URL = 'http://127.0.0.1:8080';
 import {
   View,
   StyleSheet,

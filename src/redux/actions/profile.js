@@ -20,7 +20,7 @@ export default {
   }),
   changePassword: (token, data) => ({
     type: 'CHANGE_PASSWORD',
-    payload: http(token).patch('/user/password', qs.stringify(data)),
+    payload: http(token).post('/user/change-password', qs.stringify(data)),
   }),
   logout: () => ({
     type: 'LOGOUT',
