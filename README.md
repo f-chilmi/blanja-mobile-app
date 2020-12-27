@@ -20,8 +20,9 @@ An e-commerce mobile app, customer can see, search, and buy product.
 4. Type `yarn android` or `npx react-native run-android`
 
 ## App screenshots
-<!-- <img src='.' width='25%'> -->
-<!-- ![Portofolio1](https://img.shields.io/badge/Redux-v4.0.5-purple.svg?style=rounded-square) -->
-<!-- <img src='https://drive.google.com/uc?id=19YN4WGafDedJAoNWwwdty6CHEx_R14Zd' width='25%'> 
+<img src='https://raw.githubusercontent.com/f-chilmi/blanja-mobile-app/master/src/assets/porto1.jpeg' width='25%'>
 
-<img src='https://drive.google.com/uc?id=1LqWhytwUaAn_xBGH9a77vREkziDzUuv2' width='25%'> <img src='https://drive.google.com/uc?id=1tX9tYwmop57KW4qQnXaLxxXir94PHeQa' width='25%'> -->
+<img src='https://raw.githubusercontent.com/f-chilmi/blanja-mobile-app/master/src/assets/porto2.jpeg' width='25%'> 
+
+<img src='https://raw.githubusercontent.com/f-chilmi/blanja-mobile-app/master/src/assets/porto3.jpeg' width='25%'>
+ <img src='https://raw.githubusercontent.com/f-chilmi/blanja-mobile-app/master/src/assets/porto4.jpeg' width='25%'>
